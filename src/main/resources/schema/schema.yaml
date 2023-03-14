@@ -33,8 +33,7 @@ components:
         name:
           type: string
           description: The account name.
-          x-custom-annotation: This is a custom annotation
-          x-custom-name: isRevenuePassenger
+          x-java-alias: accountName
         type:
           type: string
           description: The account type discriminator.

@@ -24,6 +24,11 @@
          <artifactId>jackson-databind</artifactId>
          <version>2.14.2</version>
       </dependency>
+      <dependency>
+         <groupId>com.fasterxml.jackson.datatype</groupId>
+         <artifactId>jackson-datatype-jsr310</artifactId>
+         <version>2.13.1</version>
+      </dependency>
    </dependencies>
 
    <build>
@@ -32,6 +37,10 @@
             <groupId>org.openapitools</groupId>
             <artifactId>openapi-generator-maven-plugin</artifactId>
             <version>6.4.0</version>
+            <configuration>
+               <library>jackson</library>
+            </configuration>
+
             <executions>
                <execution>
                   <id>OpenAPIStubs</id>
@@ -39,22 +48,35 @@
                      <goal>generate</goal>
                   </goals>
                   <configuration>
-                     <inputSpec>${project.basedir}/src/main/resources/schema/schema.yaml</inputSpec>
-                     <output>${project.build.directory}/generated-sources</output>
+                     <inputSpec>src/main/resources/schema/schema.yaml</inputSpec>
                      <generatorName>java</generatorName>
                      <modelPackage>com.example.model</modelPackage>
                      <generateApis>true</generateApis>
                      <generateModelTests>false</generateModelTests>
                      <generateModelDocumentation>false</generateModelDocumentation>
                      <generateSupportingFiles>false</generateSupportingFiles>
+                     <library>jackson</library>
                      <configOptions>
                         <useJakartaEe>true</useJakartaEe>
                         <interfaceOnly>true</interfaceOnly>
                         <serializationLibrary>jackson</serializationLibrary>
+                        <useJacksonAnnotations>true</useJacksonAnnotations>
                      </configOptions>
                   </configuration>
                </execution>
             </executions>
+            <dependencies>
+               <dependency>
+                  <groupId>com.fasterxml.jackson.core</groupId>
+                  <artifactId>jackson-databind</artifactId>
+                  <version>2.14.2</version>
+               </dependency>
+               <dependency>
+                  <groupId>com.fasterxml.jackson.datatype</groupId>
+                  <artifactId>jackson-datatype-jsr310</artifactId>
+                  <version>2.13.1</version>
+               </dependency>
+            </dependencies>
          </plugin>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
