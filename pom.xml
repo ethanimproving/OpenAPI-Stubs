@@ -20,15 +20,30 @@
 
    <dependencies>
       <dependency>
-         <groupId>com.fasterxml.jackson.core</groupId>
-         <artifactId>jackson-databind</artifactId>
-         <version>2.14.2</version>
+         <!-- OpenAPI Generator uses gson library by default to generate the Java stubs -->
+         <groupId>com.google.code.gson</groupId>
+         <artifactId>gson</artifactId>
+         <version>2.10.1</version>
       </dependency>
       <dependency>
-         <groupId>com.fasterxml.jackson.datatype</groupId>
-         <artifactId>jackson-datatype-jsr310</artifactId>
-         <version>2.13.1</version>
+         <!-- Required for JDK 17 -->
+         <groupId>jakarta.annotation</groupId>
+         <artifactId>jakarta.annotation-api</artifactId>
+         <version>2.1.1</version>
       </dependency>
+      <dependency>
+         <!-- Required for JSON.java supporting file -->
+         <groupId>io.gsonfire</groupId>
+         <artifactId>gson-fire</artifactId>
+         <version>1.8.4</version>
+      </dependency>
+      <dependency>
+         <!-- Required for JSON.java supporting file -->
+         <groupId>com.squareup.okio</groupId>
+         <artifactId>okio</artifactId>
+         <version>3.0.0-alpha.4</version>
+      </dependency>
+
    </dependencies>
 
    <build>
@@ -37,10 +52,6 @@
             <groupId>org.openapitools</groupId>
             <artifactId>openapi-generator-maven-plugin</artifactId>
             <version>6.4.0</version>
-            <configuration>
-               <library>jackson</library>
-            </configuration>
-
             <executions>
                <execution>
                   <id>OpenAPIStubs</id>
@@ -50,33 +61,19 @@
                   <configuration>
                      <inputSpec>src/main/resources/schema/schema.yaml</inputSpec>
                      <generatorName>java</generatorName>
-                     <modelPackage>com.example.model</modelPackage>
-                     <generateApis>true</generateApis>
+                     <generateApis>false</generateApis>
                      <generateModelTests>false</generateModelTests>
                      <generateModelDocumentation>false</generateModelDocumentation>
-                     <generateSupportingFiles>false</generateSupportingFiles>
-                     <library>jackson</library>
+                     <generateSupportingFiles>true</generateSupportingFiles>
                      <configOptions>
                         <useJakartaEe>true</useJakartaEe>
+                        <useJakartaNamespace>true</useJakartaNamespace>
                         <interfaceOnly>true</interfaceOnly>
-                        <serializationLibrary>jackson</serializationLibrary>
-                        <useJacksonAnnotations>true</useJacksonAnnotations>
                      </configOptions>
+                     <supportingFilesToGenerate>JSON.java</supportingFilesToGenerate>
                   </configuration>
                </execution>
             </executions>
-            <dependencies>
-               <dependency>
-                  <groupId>com.fasterxml.jackson.core</groupId>
-                  <artifactId>jackson-databind</artifactId>
-                  <version>2.14.2</version>
-               </dependency>
-               <dependency>
-                  <groupId>com.fasterxml.jackson.datatype</groupId>
-                  <artifactId>jackson-datatype-jsr310</artifactId>
-                  <version>2.13.1</version>
-               </dependency>
-            </dependencies>
          </plugin>
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>

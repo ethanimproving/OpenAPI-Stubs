@@ -52,6 +52,11 @@ components:
           properties:
             fooType:
               type: string
+      discriminator:
+        propertyName: type
+        mapping:
+          foo: '#/components/schemas/Foo'
+
   responses:
     Parent:
       description: The saved account definition.
