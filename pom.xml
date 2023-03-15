@@ -61,9 +61,9 @@
    <build>
       <plugins>
          <plugin>
-            <groupId>org.openapitools</groupId>
+            <groupId>org.openapitools.generator</groupId>
             <artifactId>openapi-generator-maven-plugin</artifactId>
-            <version>6.4.0</version>
+            <version>5.4.1</version>
             <executions>
                <execution>
                   <id>OpenAPIStubs</id>
@@ -77,10 +77,12 @@
                      <generateModelTests>false</generateModelTests>
                      <generateModelDocumentation>false</generateModelDocumentation>
                      <generateSupportingFiles>true</generateSupportingFiles>
+                     <library>jackson</library>
                      <configOptions>
                         <useJakartaEe>true</useJakartaEe>
                         <useJakartaNamespace>true</useJakartaNamespace>
                         <useJacksonAnnotations>true</useJacksonAnnotations>
+                        <serializationLibrary>jackson</serializationLibrary>
                         <interfaceOnly>true</interfaceOnly>
                      </configOptions>
                      <importMappings>
