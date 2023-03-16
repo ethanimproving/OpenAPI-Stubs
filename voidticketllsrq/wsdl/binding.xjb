@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jxb:bindings version="1.0"
+              xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+              xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+              xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+              xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+              jxb:extensionBindingPrefixes="xjc"
+              xmlns:jaxb="http://java.sun.com/xml/ns/jaxb">
+
+  <jaxb:bindings node="wsdl:definitions">
+    <jxb:bindings schemaLocation="VoidTicketLLS2.1.0RQ.xsd" node="/xsd:schema">
+      <jxb:globalBindings>
+        <xjc:simple />
+      </jxb:globalBindings>
+    </jxb:bindings>
+    <jxb:bindings node="wsdl:definitions">
+      <jxb:bindings node="wsdl:types/xsd:schema[@targetNamespace='http://www.iata.org/IATA/EDIST/2017.2']">
+        <jxb:bindings node="xsd:complexType[@name='OrderCoreType']">
+          <jxb:bindings node="xsd:sequence">
+            <jxb:property name="OrderID" />
+            <jxb:property name="ShoppingResponseIDs" />
+          </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="xsd:simpleType[@name='CompletionCodes']">
+          <jxb:typesafeEnumClass name="CompletionCodes">
+            <jxb:typesafeEnumMember value="Complete" name="COMPLETE" />
+          </jxb:typesafeEnumClass>
+        </jxb:bindings>
+        <jxb:bindings node="xsd:simpleType[@name='CurrencySimpleType']">
+          <jxb:typesafeEnumClass name="CurrencySimpleType">
+            <jxb:typesafeEnumMember value="USD" name="USD" />
+          </jxb:typesafeEnumClass>
+        </jxb:bindings>
+      </jxb:bindings>
+      <jxb:bindings node="wsdl:portType[@name='VoidTicketLLSRQPortType']/wsdl:operation[@name='VoidTicketLLS']">
+        <jxb:property name="voidTicketLLSRequest" />
+      </jxb:bindings>
+      <jxb:bindings node="wsdl:portType[@name='CollectMiscFeeLLSRQPortType']/wsdl:operation[@name='CollectMiscFeeLLS']">
+        <jxb:property name="collectMiscFeeLLSRequest" />
+      </jxb:bindings>
+    </jxb:bindings>
+  </jaxb:bindings>
+</jxb:bindings>

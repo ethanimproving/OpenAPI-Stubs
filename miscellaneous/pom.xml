@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                       http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.aa.etds</groupId>
+        <artifactId>sws-stubs</artifactId>
+        <version>2.0.0</version>
+    </parent>
+
+    <groupId>com.aa.etds.sws</groupId>
+    <artifactId>miscellaneous</artifactId>
+    <version>2.0.1</version>
+    <packaging>jar</packaging>
+
+    <name>miscellaneous</name>
+    <description>A library of plain Sabre data model classes.</description>
+
+    <properties>
+
+        <!-- skip Sonar analysis on plain data types -->
+        <sonar.exclusions>
+            <![CDATA[
+         **/header/**,
+         **/request/**,
+         **/response/**
+      ]]>
+        </sonar.exclusions>
+    </properties>
+        <build>
+
+
+        <resources>
+            <resource>
+                <directory>${basedir}/wsdl</directory>
+                <includes>
+                    <include>Miscellaneous_v.1.4.1_1.wsdl</include>
+                </includes>
+                <targetPath>META-INF/wsdl</targetPath>
+            </resource>
+            <resource>
+                <directory>${basedir}/wsdl</directory>
+                <includes>
+                    <include>jax-ws-catalog.xml</include>
+                </includes>
+                <targetPath>META-INF</targetPath>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <wsdlDirectory>${project.basedir}/wsdl/</wsdlDirectory>
+                    <catalog>${basedir}/wsdl/jax-ws-catalog.xml</catalog>
+                    <wsdlLocation>http://localhost/wsdl/Miscellaneous_v.1.4.1_1.wsdl</wsdlLocation>
+                    <sourceDestDir>
+                        ${project.build.directory}/generated-sources/
+                    </sourceDestDir>
+                    <bindingFiles>
+                        <bindingFile>${project.basedir}/wsdl/binding.xjb</bindingFile>
+                    </bindingFiles>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>maven-replacer-plugin</artifactId>
+                <version>1.4.1</version>
+                <executions>
+                    <execution>
+                        <id>replace-for-jakarta</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                        <configuration>
+                            <filesToInclude>target/generated-sources/**/*.java</filesToInclude>
+                            <preserveDir>true</preserveDir>
+                            <replacements>
+                                <replacement>
+                                    <token>javax.xml.bind</token>
+                                    <value>jakarta.xml.bind</value>
+                                </replacement>
+                                <replacement>
+                                    <token>javax.xml.ws</token>
+                                    <value>jakarta.xml.ws</value>
+                                </replacement>
+                                <replacement>
+                                    <token>javax.jws</token>
+                                    <value>jakarta.jws</value>
+                                </replacement>
+                            </replacements>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
+
+</project>

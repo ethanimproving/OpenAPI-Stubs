@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="voidticketllsrq" default="create-jar">
+
+   <!-- =================================================================== -->
+   <!-- build.properties                                                    -->
+   <!--                                                                     -->
+   <!-- By default all properties required by the build are defined in the  -->
+   <!-- Ant build.xml.  If you need to override any default property value  -->
+   <!-- you may do so by defining your own build.properties file in your    -->
+   <!-- user home folder or in this folder.                                 -->
+   <!-- =================================================================== -->
+   <property name="properties.file"         value="build.properties" />
+   <property file="${user.home}/${properties.file}" />
+   <property file="${properties.file}" />
+
+   <!-- =================================================================== -->
+   <!--                                                                     -->
+   <!-- Please, refer to the "common/buid.xml.sample" for documentation     -->
+   <!-- on the properties below.                                            -->
+   <!--                                                                     -->
+   <!-- =================================================================== -->
+   <property name="ant.build.javac.source"  value="1.6" />
+   <property name="ant.build.javac.target"  value="1.6" />
+
+   <!-- =================================================================== -->
+   <!--                                                                     -->
+   <!-- Please, refer to the "common/buid.xml.sample" for documentation     -->
+   <!-- on the properties below.                                            -->
+   <!--                                                                     -->
+   <!-- =================================================================== -->
+   <property name="major-rev"          value="3" />
+   <property name="minor-rev"          value="19" />
+   <property name="patch-rev"          value="0" />
+   <property name="after-rev"          value="" />
+   <property name="hardcode-rev"       value="true" />
+
+   <!-- =================================================================== -->
+   <!-- wsimport.arg (wsimport arguments)                                   -->
+   <!--                                                                     -->
+   <!-- This property allows the user to pass additional arguments to the   -->
+   <!-- "wsimport" WSDL compiler.                                           -->
+   <!--                                                                     -->
+   <!-- You may have multiple arguments separated by blank space.           -->
+   <!-- =================================================================== -->
+   <property name="wsimport.arg"       value="" />
+
+   <!-- =================================================================== -->
+   <!-- wsimport.xjcarg (JAXB Compiler wsimport arguments)                  -->
+   <!--                                                                     -->
+   <!-- This property allows the user to pass additional arguments to the   -->
+   <!-- JAXB "wsimport" compiler. This property is similar to the           -->
+   <!-- wsimport.arg property, except that it passes this argument straight -->
+   <!-- to the JAXB compiler.                                               -->
+   <!--                                                                     -->
+   <!-- You may have multiple arguments separated by blank space.           -->
+   <!-- =================================================================== -->
+   <property name="wsimport.xjcarg"    value="-XautoNameResolution" />
+
+   <!-- =================================================================== -->
+   <!-- wsdl.dir  (WSDL Stub Projects Only)                                 -->
+   <!--                                                                     -->
+   <!-- This property defines the path to a local folder within this project-->
+   <!-- that SHOULD contain the WSLD filename for a WSDL Stub Git project.  -->
+   <!--                                                                     -->
+   <!-- NOTICE: 1) This property is only used for WSDL Stub Git projects.   -->
+   <!--                                                                     -->
+   <!--         2) This property SHOULD not need to be changed.  It is      -->
+   <!--            provided to handle any special cases.                    -->
+   <!-- =================================================================== -->
+   <property name="wsdl.dir"               value="wsdl" />
+
+   <!-- =================================================================== -->
+   <!-- wsdl.file  (WSDL Stub Projects Only)                                -->
+   <!--                                                                     -->
+   <!-- This is the WSLD filename stored in wsdl.dir for WSDL Stub Git      -->
+   <!-- projects.                                                           -->
+   <!--                                                                     -->
+   <!-- NOTICE: This property is only used for WSDL Stub Git projects.      -->
+   <!-- =================================================================== -->
+   <property name="wsdl.file"
+            value="VoidTicketLLS2.1.0RQ.wsdl" />
+
+   <!-- =================================================================== -->
+   <!-- jaxws-version  (WSDL Stub Projects Only)                            -->
+   <!--                                                                     -->
+   <!-- The JAX-WS version (2.1, 2.2,...) used to compile the WSDL to Java. -->
+   <!--                                                                     -->
+   <!-- NOTICE: 1) As of 02/22/2017, iTKTS is running on WebSphere 7 which  -->
+   <!--            implements JAX-WS version "2.1".                         -->
+   <!--                                                                     -->
+   <!--         2) The default value should be set to 2.1 to avoid issues   -->
+   <!--            with applications that are running on old JAX-WS API.    -->
+   <!--                                                                     -->
+   <!--         3) This property is only used when compiling WSDL to Java   -->
+   <!--            using the "wsimport" JAX-WS Ant task which is the default-->
+   <!--            for WSDL Stubs projects.                                 -->
+   <!-- =================================================================== -->
+   <property name="jaxws-version"           value="2.1" />
+
+   <!-- =================================================================== -->
+   <!-- src.dir                                                             -->
+   <!--                                                                     -->
+   <!-- This property defines the path to the folder that contains the Java -->
+   <!-- source code files being compiled as part of the build.              -->
+   <!--                                                                     -->
+   <!-- NOTICE: 1) For WSDL Stub projects set this property to "gen".       -->
+   <!--                                                                     -->
+   <!--         2) The default path for the application or library Java     -->
+   <!--            source code files is "src/main/java/". If your code is   -->
+   <!--            in that path you don't need to add/change this property. -->
+   <!-- =================================================================== -->
+   <property name="src.dir"                 value="gen" />
+
+   <!-- =================================================================== -->
+   <!-- specification-title                                                 -->
+   <!--                                                                     -->
+   <!-- This property defines the "Specification-Title" information that is -->
+   <!-- added to this JAR package META-INF/MANIFEST.MF file.                -->
+   <!-- =================================================================== -->
+   <property name="specification-title"
+             value="Sabre Web Service to Void Air Ticket" />
+
+   <import file="../common/ant-wsdl.xml" />
+
+</project>

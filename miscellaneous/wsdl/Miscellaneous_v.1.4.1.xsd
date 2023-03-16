@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--edited with XMLSpy v2015 rel. 4 sp1 (x64) (http://www.altova.com) by Bartosz Wieczorek (SABRE GLBL INC)-->
+<xsd:schema targetNamespace="http://www.sabre.com/ns/Ticketing/misc/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.4.1" xmlns="http://www.sabre.com/ns/Ticketing/misc/1.0" xmlns:misc="http://www.sabre.com/ns/Ticketing/misc/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:STL="http://services.sabre.com/STL/v01">
+  <xsd:import namespace="http://services.sabre.com/STL/v01" schemaLocation="STL_For_Miscellaneous_v.1.4.1.xsd"/>
+  <xsd:element name="CalculateTotalCostRQ" type="STL:CalculateTotalCostRQ"/>
+  <xsd:element name="CalculateTotalCostRS" type="STL:CalculateTotalCostRS"/>
+  <xsd:element name="CalculateExchangeCostRQ" type="STL:CalculateExchangeCostRQ"/>
+  <xsd:element name="CalculateExchangeCostRS" type="STL:CalculateExchangeCostRS"/>
+  <xsd:element name="CollectMiscFeeRQ" type="STL:CollectMiscFeeRQ"/>
+  <xsd:element name="CollectMiscFeeRS" type="STL:CollectMiscFeeRS"/>
+  <xsd:element name="ExchangeDocumentForEMDRQ" type="STL:ExchangeDocumentforEMDRQ"/>
+  <xsd:element name="ExchangeDocumentForEMDRS" type="STL:ExchangeDocumentforEMDRS"/>
+  <xsd:element name="GetMiscFeesRQ" type="STL:GetMiscFeesRQ"/>
+  <xsd:element name="GetMiscFeesRS" type="STL:GetMiscFeesRS"/>
+  <xsd:element name="GetMiscOverrideRQ" type="STL:GetMiscOverrideRQ"/>
+  <xsd:element name="GetMiscOverrideRS" type="STL:GetMiscOverrideRS"/>
+  <xsd:element name="WaiveMiscFeeRQ" type="STL:WaiveMiscFeeRQ"/>
+  <xsd:element name="WaiveMiscFeeRS" type="STL:WaiveMiscFeeRS"/>
+</xsd:schema>

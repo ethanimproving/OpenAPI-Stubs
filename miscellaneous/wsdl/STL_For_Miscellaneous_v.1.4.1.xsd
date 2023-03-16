@@ -1,0 +1,2344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--edited with XMLSpy v2017 rel. 3 (x64) (http://www.altova.com) by Ravi (Sabre GLBL Inc.)-->
+<xsd:schema targetNamespace="http://services.sabre.com/STL/v01"
+  elementFormDefault="qualified" attributeFormDefault="unqualified"
+  version="1.4.0" xmlns="http://services.sabre.com/STL/v01"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:annotation>
+    <xsd:documentation>from the STL_Headers_v.1.0.2 package with namespace http://services.sabre.com/STL/v01</xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>4-16-2010 dmh - added ConversationID, MessageID and Version to RQ and RS.</xsd:documentation>
+  </xsd:annotation>
+  <xsd:complexType name="AirportTax">
+    <xsd:annotation>
+      <xsd:documentation>Domestic airport taxes collected from and paid by the customer</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Amount" type="Amount" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="taxCode">
+      <xsd:annotation>
+        <xsd:documentation>A code that applies to the tax (e.g, US, ZP)</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="AlphaNumericStringLength2to3">
+          <xsd:enumeration value="XF"/>
+          <xsd:enumeration value="ZP"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="airportCode" type="CityCode" use="required">
+      <xsd:annotation>
+        <xsd:documentation>A city code associated to ZP and XF taxes</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="Amount">
+    <xsd:simpleContent>
+      <xsd:extension base="_amount">
+        <xsd:attribute name="currencyCode" type="CurrencyCode" default="USD"/>
+        <xsd:attribute name="currency" type="ProperName"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Amount.Basic">
+    <xsd:sequence>
+      <xsd:element name="Amount" type="Amount">
+        <xsd:annotation>
+          <xsd:documentation>Actual amount</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Text" type="StringLength1to25" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Any text associated to the amount.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ApplyCreditInd" type="xsd:boolean" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Boolean value set to 'Y' if the amount is negative</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Calculate.MiscTransInfo">
+    <xsd:sequence>
+      <xsd:element name="InputCurrency" type="CurrencyCode" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Currency code inputted by the agent and used to calculate fees.  Mapped to:  SR05_11_ICUR</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ExemptGSTTax" type="xsd:boolean" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>An indicator to exempt government sales tax (GST) in Canada.  Mapped to: SR05_11_TEXP,#SR05_11_GSTP</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ExemptPSTTax" type="xsd:boolean" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>An indicator to exempt provincial sales tax (GST) in Canada.  Mapped to: SR05_11_TEXP,#SR05_11_PSTP</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CalculateTotalCostRQ">
+    <xsd:sequence>
+      <xsd:element name="Header" type="STL_Header.RQ" minOccurs="0"/>
+      <xsd:element name="AgentPOS" type="POS.Misc"/>
+      <xsd:element name="Transaction" type="MiscTransInfo"/>
+      <xsd:element name="Parameters" type="Calculate.MiscTransInfo" minOccurs="0"/>
+      <xsd:element name="Fees" type="FeesType" maxOccurs="99"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="MISC_PayloadStdAttributes"/>
+  </xsd:complexType>
+  <xsd:complexType name="CalculateTotalCostRS">
+    <xsd:sequence>
+      <xsd:element name="Header" type="STL_Header.RS"/>
+      <xsd:element name="AgentPOS" type="POS.Misc" minOccurs="0"/>
+      <xsd:element name="Transaction" type="MiscTransInfo" minOccurs="0"/>
+      <xsd:element name="Parameters" type="Calculate.MiscTransInfo" minOccurs="0"/>
+      <xsd:element name="Fees" type="FeesType" minOccurs="0" maxOccurs="99"/>
+      <xsd:element name="TotalCost" type="Amount" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="MISC_PayloadStdAttributes"/>
+  </xsd:complexType>
+  <xsd:complexType name="Check.Misc">
+    <xsd:sequence>
+      <xsd:element name="MICRNumber" type="StringLength1to25" minOccurs="0"/>
+      <xsd:element name="ApprovalCode" type="AlphaNumericStringLength1to8" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Collect.MiscTransInfo">
+    <xsd:sequence>
+      <xsd:element name="PrinterLniata" type="StringLength6" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A printer line address where the document will be printed.  A printer should have been assigned by the agent (e.g., F20204)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrinterStock" type="AlphaNumericStringLength2" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A stock code used to assign a printer.  Mapped to:  SR05_11_PSTK</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrintTaxCpn" type="xsd:boolean" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>An indicator  that a tax coupon will be printed.  Mapped to:  SR05_11_TCPN</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CarrierOverride" type="AlphaNumericStringLength2to3" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Validating carrier override for host partitions containing more than one carrier (ie LAN). Mapped to:
+SR05_11_OVR, SR05_11_OVRE</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AgencyIdOverride" type="EmptyOrNumericStringLength7" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>AGID - Agency ID override. An override for non-IATA "direct connect" Agency 7-digit numeric identifier or a blank value (meaning that the AGID element should not be added to the resulting EMD document). In case it’s not provided, the AGID element will be copied to the EMD from the PNR. Mapped to: SR05_D3_DATA with SR05_D3_TYPE = 'A'</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="CollectMiscFeeRQ">
+    <xsd:sequence>
+      <xsd:element name="Header" type="STL_Header.RQ" minOccurs="0"/>
+      <xsd:element name="AgentPOS" type="POS.Misc"/>
+      <xsd:element name="Transaction" type="MiscTransInfo"/>
+      <xsd:element name="Parameters" type="Collect.MiscTransInfo" minOccurs="0"/>
+      <xsd:element name="Fees" type="FeesType" maxOccurs="99"/>
+      <xsd:element name="TotalCost" type="Amount">
+        <xsd:annotation>
+          <xsd:documentation>The grand total cost of all the purchases made.  The calculated cost should match the total payment amount (single or multiple forms of payment)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Payment" type="Payment.Misc" maxOccurs="2"/>
+      <xsd:element name="DetailLevel" type="RequestedDetailLevel"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="MISC_PayloadStdAttributes"/>
+  </xsd:complexType>
+  <xsd:complexType name="CollectMiscFeeRS">
+    <xsd:sequence>
+      <xsd:element name="Header" type="STL_Header.RS"/>
+      <xsd:element name="AgentPOS" type="POS.Misc" minOccurs="0"/>
+      <xsd:element name="Transaction" type="MiscTransInfo" minOccurs="0"/>
+      <xsd:element name="Parameters" type="Collect.MiscTransInfo" minOccurs="0"/>
+      <xsd:element name="Fees" type="FeesType" minOccurs="0" maxOccurs="99"/>
+      <xsd:element name="TotalCost" type="Amount" minOccurs="0"/>
+      <xsd:element name="Payment" type="Payment.Misc" minOccurs="0" maxOccurs="2"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="MISC_PayloadStdAttributes"/>
+  </xsd:complexType>
+  <xsd:complexType name="CalculateExchangeCostRQ">
+    <xsd:sequence>
+      <xsd:element name="Header" type="STL_Header.RQ" minOccurs="0"/>
+      <xsd:element name="AgentPOS" type="POS.Misc"/>
+      <xsd:element name="Transaction" type="MiscTransInfo"/>
+      <xsd:element name="Fees" type="Fees.Linked.Exchange"/>
+      <xsd:element name="TotalCost" type="Amount">
+        <xsd:annotation>
+          <xsd:documentation>The grand total cost of all the purchases made.  The calculated cost should match the total payment amount (single or multiple forms of payment)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ExchangeDoc" type="ExchangeDocument.Misc"/>
+      <xsd:element name="DetailLevel" type="RequestedDetailLevel"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="MISC_PayloadStdAttributes"/>
+  </xsd:complexType>
+  <xsd:complexType name="CalculateExchangeCostRS">
+    <xsd:sequence>
+      <xsd:element name="Header" type="STL_Header.RS"/>
+      <xsd:element name="AgentPOS" type="POS.Misc" minOccurs="0"/>
+      <xsd:element name="Transaction" type="MiscTransInfo" minOccurs="0"/>
+      <xsd:element name="Fees" type="Fees.Linked.Exchange" minOccurs="0" maxOccurs="99"/>
+      <xsd:element name="TotalCost" type="Amount" minOccurs="0"/>
+      <xsd:element name="ExchangeDoc" type="ExchangeDocument.Details" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="ExchangeCost" type="ExchangeCost.Misc" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="MISC_PayloadStdAttributes"/>
+  </xsd:complexType>
+  <xsd:complexType name="Exchange.MiscTransInfo">
+    <xsd:sequence>
+      <xsd:element name="PrinterLniata" type="StringLength6" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A printer line address where the document will be printed.  A printer should have been assigned by the agent (e.g., F20204)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrinterStock" type="AlphaNumericStringLength2" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A stock code used to assign a printer.  Mapped to:  SR05_11_PSTK</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrintTaxCpn" type="xsd:boolean" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>An indicator  that a tax coupon will be printed.  Mapped to:  SR05_11_TCPN</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CarrierOverride" type="AlphaNumericStringLength2to3" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Validating carrier override for host partitions containing more than one carrier (ie LAN). Mapped to:
+SR05_11_OVR, SR05_11_OVRE</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AgencyIdOverride" type="EmptyOrNumericStringLength7" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>AGID - Agency ID override. An override for non-IATA "direct connect" Agency 7-digit numeric identifier or a blank value (meaning that the AGID element should not be added to the resulting EMD document). In case it’s not provided, the AGID element will be copied to the EMD from the PNR. Mapped to: SR05_D3_DATA with SR05_D3_TYPE = 'A'</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ExchangeDocumentforEMDRQ">
+    <xsd:sequence>
+      <xsd:element name="Header" type="STL_Header.RQ" minOccurs="0"/>
+      <xsd:element name="AgentPOS" type="POS.Misc"/>
+      <xsd:element name="Transaction" type="MiscTransInfo"/>
+      <xsd:element name="Parameters" type="Exchange.MiscTransInfo" minOccurs="0"/>
+      <xsd:element name="Fees" type="Fees.Linked"/>
+      <xsd:element name="TotalCost" type="Amount">
+        <xsd:annotation>
+          <xsd:documentation>The grand total cost of all the purchases made.  The calculated cost should match the total payment amount (single or multiple forms of payment)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Payment" type="Payment.Misc" maxOccurs="2"/>
+      <xsd:element name="ExchangeCost" type="ExchangeCost.Misc" minOccurs="0"/>
+      <xsd:element name="DetailLevel" type="RequestedDetailLevel"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="MISC_PayloadStdAttributes"/>
+  </xsd:complexType>
+  <xsd:complexType name="ExchangeDocumentforEMDRS">
+    <xsd:sequence>
+      <xsd:element name="Header" type="STL_Header.RS"/>
+      <xsd:element name="AgentPOS" type="POS.Misc" minOccurs="0"/>
+      <xsd:element name="Transaction" type="MiscTransInfo" minOccurs="0"/>
+      <xsd:element name="Parameters" type="Exchange.MiscTransInfo" minOccurs="0"/>
+      <xsd:element name="Fees" type="Fees.Linked" minOccurs="0" maxOccurs="99"/>
+      <xsd:element name="TotalCost" type="Amount" minOccurs="0"/>
+      <xsd:element name="Payment" type="Payment.Misc" minOccurs="0" maxOccurs="2"/>
+      <xsd:element name="ExchangeDoc" type="ExchangeDocument.Details" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="ExchangeCost" type="ExchangeCost.Misc" minOccurs="0"/>
+      <xsd:element name="RefundDoc" type="DocumentNumber" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="MISC_PayloadStdAttributes"/>
+  </xsd:complexType>
+  <xsd:complexType name="CreditCard.Misc">
+    <xsd:sequence>
+      <xsd:element name="Code" type="PaymentCardCode">
+        <xsd:annotation>
+          <xsd:documentation>A card type used for paying a service or item (e.g, MC, VI, BT, BA, etc)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Number" type="Number.ClearCreditCard" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>An account number associated to card type
+Note: Only Number OR TokenizedNumber is allowed  in the request</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TokenizedNumber" type="Number.CreditCard" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Tokenized credit card number
+Note: Only Number OR TokenizedNumber is allowed  in the request</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ExpiryDate" type="MMYYDate">
+        <xsd:annotation>
+          <xsd:documentation>Credit card expiration date</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="SecurityCode" type="StringLength1to6" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Security card code of the payment method used (CSC)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ApprovalCode" type="AlphaNumericStringLength1to8" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>An approval code associated to payment.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ExtendedPayCode" type="AlphaNumericStringLength2" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A code associated to the extended payment of the credit card used.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EffectiveDate" type="MMYYDate" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>required if Maestro CC</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="CompressedNumber" type="StringLength1to50" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>required if Maestro CC</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="transactionID" type="StringLength1to15"/>
+  </xsd:complexType>
+  <xsd:complexType name="Customer.Misc">
+    <xsd:sequence>
+      <xsd:element name="CustomerDetails" type="CustomerDetails.Misc" minOccurs="0"/>
+      <xsd:element name="Message" type="CustomerMessage.Misc" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="lastName" type="PNRName" use="required">
+      <xsd:annotation>
+        <xsd:documentation>The last name of the customer who purchased a ticket or service.  Mapped to: SR05_32_LNAM</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="firstName" type="PNRName" use="required">
+      <xsd:annotation>
+        <xsd:documentation>The first name of the customer who purchased the ticket or service.  Mapped to: SR05_32_FNAM</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="Customer.Misc.Override">
+    <xsd:sequence>
+      <xsd:element name="CustomerDetails" type="CustomerDetails.Misc" minOccurs="0"/>
+      <xsd:element name="Override" type="Override.Misc" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="lastName" type="PNRName" use="required">
+      <xsd:annotation>
+        <xsd:documentation>The last name of the customer who purchased a ticket or service.  Mapped to: SR05_32_LNAM</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="firstName" type="PNRName" use="required">
+      <xsd:annotation>
+        <xsd:documentation>The first name of the customer who purchased the ticket or service.  Mapped to: SR05_32_FNAM</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="CustomerDetails.Misc">
+    <xsd:sequence>
+      <xsd:element name="FrequentFlyer" type="FrequentFlyer.Misc" minOccurs="0"/>
+      <xsd:element name="AgencyIataNumber" type="StringLength1to8" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>IATA Number of an agency for revenue and commission tracking. Mapped to: SR05_32_IATA</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="nameRefNumber" type="xsd:decimal">
+      <xsd:annotation>
+        <xsd:documentation>A name number associated to the traveller or purchaser in the PNR (e.g. 1.1)</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="nameId" type="NumericLength1to2">
+      <xsd:annotation>
+        <xsd:documentation>A unique id that is associated to a passenger name in the PNR. Mapped to:  SR05_31_NID</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="pnrLocator" type="UpperCaseAlphaLength6">
+      <xsd:annotation>
+        <xsd:documentation>A code associated to the reservations of the customer purchasing an ancillary service.  Mapped to: SR05_31_PNR</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="CustomerMessage.Misc">
+    <xsd:annotation>
+      <xsd:documentation>Mapped to SR05_D3_DATA</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="StringLength1to100">
+        <xsd:attribute name="number" type="xsd:int">
+          <xsd:annotation>
+            <xsd:documentation>Mapped to SR05_D3_PXID
+Put sequential number in per customer as each customer appears in XML for request.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="type">
+          <xsd:annotation>
+            <xsd:documentation>Mapped to SR05_D3_TYPE
+Example values:
+V = VCR Remarks</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:length value="1"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="DiagnosticResults">
+    <xsd:sequence>
+      <xsd:any namespace="##other" processContents="strict" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="DocumentNumber">
+    <xsd:simpleContent>
+      <xsd:extension base="StringLength13to15">
+        <xsd:attribute name="couponNumber" type="AlphaNumericStringLength1to5"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Emd.FreqFlyer">
+    <xsd:sequence>
+      <xsd:element name="Number" type="StringLength1to20"/>
+      <xsd:element name="AirlineCode" type="AirlineCode"/>
+      <xsd:element name="TierLevel" type="NumericStringLength1to5"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Emd.Service">
+    <xsd:sequence>
+      <xsd:element name="SubCode" type="UpperCaseAlphaNumericLength3"/>
+      <xsd:element name="RFIC" type="AlphaNumericStringLength1">
+        <xsd:annotation>
+          <xsd:documentation>Reason For Issuance Code</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Group" type="ATPCO.Group"/>
+      <xsd:element name="CommercialName" type="StringLength0to128"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="EndorsementType">
+    <xsd:simpleContent>
+      <xsd:extension base="StringLength1to60">
+        <xsd:attribute name="type">
+          <xsd:annotation>
+            <xsd:documentation>Mapped to SR05_3A_TYPE</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+              <xsd:length value="4"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ErrorMessage">
+    <xsd:annotation>
+      <xsd:documentation>Free text and code provided by the application or system that detected the error. Contants may be anything the system detecting the error chooses to convey. Used by service consumers.  Codes and/or messages should be agreed upon by service users. Do not use for structured data, use parameters instead.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="Text.Long">
+        <xsd:attribute name="code" type="xsd:integer"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="ExchangeDocument.Misc">
+    <xsd:sequence>
+      <xsd:element name="DocumentNumber" type="DocumentNumber"/>
+      <xsd:element name="IssueDate" type="xsd:date" minOccurs="0"/>
+      <xsd:element name="IssuePlace" type="AlphaNumericStringLength1to5" minOccurs="0"/>
+      <xsd:element name="OrigFop" type="StringLength1to50" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ExchangeDocument.Details">
+    <xsd:sequence>
+      <xsd:element name="DocumentNumber" type="StringLength13to15">
+        <xsd:annotation>
+          <xsd:documentation>Mapped to T2 database:
+TKT_DOC.TKT_DOC_ID</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="IssueDate" type="xsd:dateTime" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Mapped to T2 database: TKT_DOC.TKT_DOC_LCL_ISSUE_DTM</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DocumentType" type="StringLength1to3" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Mapped to T2 database: TKT_DOC.TKT_DOC_TYP_CD</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="IssuePlace" type="AlphaNumericStringLength1to5" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Mapped to T2 database: TKT_TNA.ISSUING_AGT_WRK_LOC_ID</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Reservation" type="UpperCaseAlphaLength6" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Mapped to T2 database: TKT_DOC.SAB_RES_ID</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FirstName" type="ProperName" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Mapped to T2 database: TKT_DOC_CST.CST_FRST_NM;</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="LastName" type="ProperName" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Mapped to T2 database: TKT_DOC.CST_LAST_NM;</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TotalAmount" type="Amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The exchange value of the document.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Payment" type="StringLength1to50" minOccurs="0" maxOccurs="2"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="ExchangeCost.Misc">
+    <xsd:sequence>
+      <xsd:element name="Exchange" type="Amount.Basic" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Exchange Amount</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="result" type="AlphaNumericStringLength2" use="required">
+      <xsd:annotation>
+        <xsd:documentation>Code associated to the result of the exchange cost comparison.  Values can be RF - refund, AC - add/collect, EE - even exchange</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="refundFOP" type="AlphaNumericStringLength2to3">
+      <xsd:annotation>
+        <xsd:documentation>Refund FOP. Available only when result attribute is set to RF</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="Fee.Grouped">
+    <xsd:sequence>
+      <xsd:element name="FeeDetails" type="FeeDetails.Misc"/>
+      <xsd:element name="OptionalService" type="OptionalService" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Specific information about optional service (OC) as published in ATPCO or Merchandiziing</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FrequentFlyer" minOccurs="0"/>
+      <xsd:element name="Valuation" type="Valuation" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Additional charges associated to a high value or excess valuation of an item</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Tax" type="Tax.Misc" minOccurs="0" maxOccurs="99"/>
+      <xsd:element name="AirportTax" type="AirportTax" minOccurs="0" maxOccurs="32"/>
+      <xsd:element name="IssuedDocumentNumber" type="DocumentNumber" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Fee.Linked">
+    <xsd:sequence>
+      <xsd:element name="FeeDetails" type="FeeDetails.Misc"/>
+      <xsd:element name="FOPDetails" type="FOPDetails.Misc" minOccurs="0"/>
+      <xsd:element name="OptionalService" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Specific information about optional service (OC) as published in ATPCO or Merchandiziing</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:complexContent>
+            <xsd:extension base="OptionalService"/>
+          </xsd:complexContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="FrequentFlyer" type="Emd.FreqFlyer" minOccurs="0"/>
+      <xsd:element name="Valuation" type="Valuation" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Additional charges associated to a high value or excess valuation of an item</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AssociatedFlight" type="Flight.Misc" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Fee can be associated to a flight coupon.  When applicable, connecting or downline flights are included in this element.  Use AssociatedFlight if miscellaneous items have PRAS codes that required flight coupons and are originally processed thru the following MISC options:
+
+MISC2/4 - CHANGE FEE
+MISC2/5 - OPTIONAL FEE
+EMD-A (Future)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Tax" type="Tax.Misc" minOccurs="0" maxOccurs="99"/>
+      <xsd:element name="AirportTax" type="AirportTax" minOccurs="0" maxOccurs="32"/>
+      <xsd:element name="AssociatedTicketNumber" type="DocumentNumber" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Fee can be associated to a ticket number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="IssuedDocumentNumber" type="DocumentNumber" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Fee.Linked.Exchange">
+    <xsd:sequence>
+      <xsd:element name="FeeDetails" type="FeeDetails.Misc"/>
+      <xsd:element name="OptionalService" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Specific information about optional service (OC) as published in ATPCO or Merchandiziing</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:complexContent>
+            <xsd:extension base="OptionalService"/>
+          </xsd:complexContent>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="AssociatedFlight" type="Flight.Misc" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Fee can be associated to a flight coupon.  When applicable, connecting or downline flights are included in this element.  Use AssociatedFlight if miscellaneous items have PRAS codes that required flight coupons and are originally processed thru the following MISC options:
+
+MISC2/4 - CHANGE FEE
+MISC2/5 - OPTIONAL FEE
+EMD-A (Future)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Tax" type="Tax.Misc" minOccurs="0" maxOccurs="99"/>
+      <xsd:element name="AssociatedTicketNumber" type="DocumentNumber" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Fee can be associated to a ticket number</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FeeDetails.Misc">
+    <xsd:sequence>
+      <xsd:element name="Base" type="Amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The base fee amount associated to the item or service which does not include taxes.   Mapped to: SR05_C1_BAMT</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Equiv" type="Amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The equivalent or converted fee amount associated to the item or service which does not include taxes.   Mapped to: SR05_C1_BAMT</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TotalTax" type="Amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The total fee taxes associated to the item or service purchased.   Mapped to: SR05_C1_TAMT</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Total" type="Amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The total fee amount associated to the service including taxes.   Mapped to: SR05_C1_FAMT</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EffectiveDate" type="xsd:date" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The date the fee and amounts will be effective or can be used for purchase.  Mapped to:  SR05_C1_EFFD</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="code" type="StringLength1to3" use="required">
+      <xsd:annotation>
+        <xsd:documentation>PRAS code associated to the  service or item.  Mapped to: SR05_C1_PRAS</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="description" type="StringLength1to21">
+      <xsd:annotation>
+        <xsd:documentation>Description of the purchased item or service.  Mapped to: SR05_C1_DESC</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="quantity" type="NumericLength1to2">
+      <xsd:annotation>
+        <xsd:documentation>The number of items purchased per PRAS code.  Mapped to: SR05_C1_IQTY</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="FOPDetails.Misc">
+    <xsd:sequence>
+      <xsd:element name="FOP" type="FOP.Detail.Misc" minOccurs="1" maxOccurs="2">
+        <xsd:annotation>
+          <xsd:documentation>Amount taken from particular form of payment to fulfill partially or fully the given service fee. Mapped to ??SR05_??</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FOP.Detail.Misc">
+    <xsd:simpleContent>
+      <xsd:extension base="_amount">
+        <xsd:attribute name="paymentRefNumber" use="required">
+          <xsd:annotation>
+            <xsd:documentation>Reference to the form of payment (//Payment/@refNumber) being used to pay for given service fee (fully or partially).  Mapped to: ??SR05_??</xsd:documentation>
+          </xsd:annotation>
+          <xsd:simpleType>
+            <xsd:restriction base="xsd:integer">
+              <xsd:minInclusive value="1"/>
+              <xsd:maxInclusive value="2"/>
+            </xsd:restriction>
+          </xsd:simpleType>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="FeeItem.Misc">
+    <xsd:sequence>
+      <xsd:element name="FeeDetails" type="FeeDetails.Misc"/>
+      <xsd:element name="Tax" type="Tax.Misc" minOccurs="0" maxOccurs="99"/>
+      <xsd:element name="Flight" type="Flight.Misc" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="Usage" type="FeeUsageParameters" minOccurs="0"/>
+      <xsd:element name="OptionalService" type="OptionalService.GetMiscFees" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FeeList.Misc">
+    <xsd:sequence>
+      <xsd:element name="Fee" type="FeeItem.Misc" maxOccurs="999"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FeeParameterMaximum">
+    <xsd:attribute name="ticket" type="xsd:int">
+      <xsd:annotation>
+        <xsd:documentation>Maximum number oif tickets which may be associated to PRAS item</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="segment" type="xsd:int">
+      <xsd:annotation>
+        <xsd:documentation>Maximum number of flight segments which may be associated to PRAS item</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="Fees.Grouped">
+    <xsd:sequence>
+      <xsd:element name="Customer" type="Customer.Misc"/>
+      <xsd:element name="TicketNumber" type="DocumentNumber" minOccurs="0" maxOccurs="6">
+        <xsd:annotation>
+          <xsd:documentation>One or more fees are related to one or more ticket numbers. Use TicketNumber if miscellaneous items have PRAS codes that are originally processed thru the following MISC options and required ticket numbers:
+
+MISC2/1 - SALES ITEMS
+MISC2/2 - SERVICES
+MISC2/3 - UNPAID TAXES
+MISC3 - EXCESS BAGGAGE TICKET</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Flight" type="Flight.Misc" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>One or more fees are related to one or more flight coupons.  Use Flight if miscellaneous items have PRAS codes that are originally processed thru the following MISC options and required flight coupons:
+
+MISC2/1 - SALES ITEMS
+MISC2/2 - SERVICES
+MISC2/3 - UNPAID TAXES
+MISC3 - EXCESS BAGGAGE TICKET</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Fee" type="Fee.Grouped" maxOccurs="99"/>
+      <xsd:element name="Endorsement" type="EndorsementType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Mapped to SR05_3A_ENDO</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Fees.Grouped.Override">
+    <xsd:sequence>
+      <xsd:element name="Customer" type="Customer.Misc.Override"/>
+      <xsd:element name="TicketNumber" type="DocumentNumber" minOccurs="0" maxOccurs="6">
+        <xsd:annotation>
+          <xsd:documentation>One or more fees are related to one or more ticket numbers. Use TicketNumber if miscellaneous items have PRAS codes that are originally processed thru the following MISC options and required ticket numbers:
+
+MISC2/1 - SALES ITEMS
+MISC2/2 - SERVICES
+MISC2/3 - UNPAID TAXES
+MISC3 - EXCESS BAGGAGE TICKET</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Flight" type="Flight.Misc" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>One or more fees are related to one or more flight coupons.  Use Flight if miscellaneous items have PRAS codes that are originally processed thru the following MISC options and required flight coupons:
+
+MISC2/1 - SALES ITEMS
+MISC2/2 - SERVICES
+MISC2/3 - UNPAID TAXES
+MISC3 - EXCESS BAGGAGE TICKET</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Fee" type="Fee.Grouped" maxOccurs="99"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Fees.Linked">
+    <xsd:sequence>
+      <xsd:element name="Customer" type="Customer.Misc"/>
+      <xsd:element name="Fee" type="Fee.Linked" maxOccurs="99"/>
+      <xsd:element name="Endorsement" type="EndorsementType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+          <xsd:documentation>Mapped to SR05_3A_ENDO</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Fees.Linked.Exchange">
+    <xsd:sequence>
+      <xsd:element name="Customer" type="Customer.Misc"/>
+      <xsd:element name="Fee" type="Fee.Linked.Exchange" maxOccurs="99"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Fees.Linked.Override">
+    <xsd:sequence>
+      <xsd:element name="Customer" type="Customer.Misc.Override"/>
+      <xsd:element name="Fee" type="Fee.Linked" maxOccurs="99"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="FeesType">
+    <xsd:group ref="Fees.Association" minOccurs="0"/>
+  </xsd:complexType>
+  <xsd:complexType name="FeesType.Override">
+    <xsd:group ref="Fees.Association.Override" minOccurs="0"/>
+  </xsd:complexType>
+  <xsd:complexType name="FeeUsageParameters">
+    <xsd:sequence>
+      <xsd:element name="Max" type="FeeParameterMaximum" minOccurs="0"/>
+      <xsd:element name="Suffix" type="StringLength1to3" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>PRAS item suffix</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Group" type="NumericLength1to2" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Group number associated to PRAS items. Multiple PRAS items with the same group number print together on MSR where possible.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="ticket">
+      <xsd:annotation>
+        <xsd:documentation>Related ticket:
+Y = Required
+N = Not Required
+A = Association Required
+Mapped to SR05_CA_ITKT</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Y"/>
+          <xsd:enumeration value="N"/>
+          <xsd:enumeration value="A"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="PNR">
+      <xsd:annotation>
+        <xsd:documentation>Related PNR:
+Y = Required
+N = Not Required
+Mapped to SR05_CA_IPNR</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Y"/>
+          <xsd:enumeration value="N"/>
+          <xsd:enumeration value="A"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="segment">
+      <xsd:annotation>
+        <xsd:documentation>Related flight segment:
+Y = Required
+N = Not Required
+A = Association Required
+Mapped to SR05_CA_ISEG</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Y"/>
+          <xsd:enumeration value="N"/>
+          <xsd:enumeration value="A"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="override">
+      <xsd:annotation>
+        <xsd:documentation>Overridable indicator:
+Y = Overridable
+N = Not Overridable
+Mapped to SR05_CA_IOVR</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Y"/>
+          <xsd:enumeration value="N"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="null">
+      <xsd:annotation>
+        <xsd:documentation>Null indicator:
+Y = Null allowed
+N = Null not allowed
+Mapped to SR05_CA_INUL</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Y"/>
+          <xsd:enumeration value="N"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="coupon">
+      <xsd:annotation>
+        <xsd:documentation>Related coupon:
+Y = Required
+N = Not Required
+A = Association Required
+Mapped to SR05_CA_ICPN</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Y"/>
+          <xsd:enumeration value="N"/>
+          <xsd:enumeration value="A"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="fakePras">
+      <xsd:annotation>
+        <xsd:documentation>Fake PRAS code
+Y = Fake PRAS code
+N = Real PRAS code
+Mapped to SR05_CA_INRL</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="Y"/>
+          <xsd:enumeration value="N"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="Flight.Misc">
+    <xsd:sequence>
+      <xsd:element name="CarrierCode" type="AirlineCode">
+        <xsd:annotation>
+          <xsd:documentation>The carrier code of the flight associated to the service.  Mapped to:  SR05_42_CXRC, SR05_C4_CXRC</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OperatingCarrierCode" type="AirlineCode" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The operating carrier code of the flight associated to the service.  Mapped to:  SR05_C4_OPRC</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FlightNumber" type="FlightNumber">
+        <xsd:annotation>
+          <xsd:documentation>The flight number associated to the service.   Mapped to: SR05_42_FLTN, SR05_C4_FLTN</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ClassOfService" type="CabinType.3Chars">
+        <xsd:annotation>
+          <xsd:documentation>The flight class of service associated to the ancillary service.  Mapped to: SR05_42_CLSV, SR05_C4_CLSV</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DepartureCity" type="CityCode">
+        <xsd:annotation>
+          <xsd:documentation>The origin or depature city code of the flight associated to the service.   Mapped to: SR05_42_DCTY, SR05_C4_DCTY</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ArrivalCity" type="CityCode">
+        <xsd:annotation>
+          <xsd:documentation>The destination or arrival city of the flight associated to the service.   Mapped to: SR05_42_ACTY, SR05_C4_ACTY</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DepartureDate" type="xsd:date">
+        <xsd:annotation>
+          <xsd:documentation>The departure date of the flight associated to the service.  Mapped to: SR05_42_CDTE, SR05_C4_CDTE</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="StopOver" type="AlphaNumericStringLength1" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A code that applies to whether the flight is a stop over or not (X, O).   Mapped to: SR05_42_STOV, SR05_C4_STOV</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FrequentFlyer" type="Emd.FreqFlyer" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Frequent Flyer information. Mapped to: SR05_C4_FFN, SR05_C4_FAL, SR05_C4_FLV</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AssociatedTicketNumber" type="DocumentNumber" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Associated ticket number for segment. Mapped to: SR05_C4_TKT, SR05_C4_CPN</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="IssuedDocumentNumber" type="DocumentNumber" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Generated ticket number for segment. Mapped to: SR05_C4_GTKT, SR05_C4_GCPN</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="segmentID" type="xsd:int">
+      <xsd:annotation>
+        <xsd:documentation>Segment ID in the PNR. Will be provided by orchestrated web service. Not expected of agent via Interact or other interface.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="segmentNumber" type="xsd:int">
+      <xsd:annotation>
+        <xsd:documentation>Segment number as shown in the PNR.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="Flight.Misc.Exchange">
+    <xsd:sequence>
+      <xsd:element name="CarrierCode" type="AirlineCode">
+        <xsd:annotation>
+          <xsd:documentation>The carrier code of the flight associated to the service.  Mapped to:  SR05_42_CXRC, SR05_C4_CXRC</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="FlightNumber" type="FlightNumber">
+        <xsd:annotation>
+          <xsd:documentation>The flight number associated to the service.   Mapped to: SR05_42_FLTN, SR05_C4_FLTN</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ClassOfService" type="CabinType.3Chars">
+        <xsd:annotation>
+          <xsd:documentation>The flight class of service associated to the ancillary service.  Mapped to: SR05_42_CLSV, SR05_C4_CLSV</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DepartureCity" type="CityCode">
+        <xsd:annotation>
+          <xsd:documentation>The origin or depature city code of the flight associated to the service.   Mapped to: SR05_42_DCTY, SR05_C4_DCTY</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ArrivalCity" type="CityCode">
+        <xsd:annotation>
+          <xsd:documentation>The destination or arrival city of the flight associated to the service.   Mapped to: SR05_42_ACTY, SR05_C4_ACTY</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DepartureDate" type="xsd:date">
+        <xsd:annotation>
+          <xsd:documentation>The departure date of the flight associated to the service.  Mapped to: SR05_42_CDTE, SR05_C4_CDTE</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="StopOver" type="AlphaNumericStringLength1" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A code that applies to whether the flight is a stop over or not (X, O).   Mapped to: SR05_42_STOV, SR05_C4_STOV</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AssociatedTicketNumber" type="DocumentNumber" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Associated ticket number for segment. Mapped to: SR05_C4_TKT, SR05_C4_CPN</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="segmentNumber" type="xsd:int">
+      <xsd:annotation>
+        <xsd:documentation>Segment number as shown in the PNR.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="FormOfIdentification.Misc">
+    <xsd:sequence>
+      <xsd:element name="Number" type="AlphaNumericStringLength1to25">
+        <xsd:annotation>
+          <xsd:documentation>A number that would identify the person who purchases the service.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="code" use="required">
+      <xsd:annotation>
+        <xsd:documentation>Unique code that identifies the typ of id the person has used for purchasing the service or item</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="PrimaryIdCodeList"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="secondaryId">
+      <xsd:annotation>
+        <xsd:documentation>Unique code associiated to the secondary ID</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="SecondaryIdCodeList"/>
+      </xsd:simpleType>
+    </xsd:attribute>
+    <xsd:attribute name="state" type="AlphaLength2"/>
+  </xsd:complexType>
+  <xsd:complexType name="FormOfPaymentChoice.Misc">
+    <xsd:choice>
+      <xsd:element name="CreditCard" type="CreditCard.Misc">
+        <xsd:annotation>
+          <xsd:documentation>FOP Code=CC</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ExchangeDoc" type="ExchangeDocument.Misc">
+        <xsd:annotation>
+          <xsd:documentation>FOP Code=ET</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Cash" type="StringLength0to128">
+        <xsd:annotation>
+          <xsd:documentation>Presensence of this element indicates a cash transaction; FOP Code=CA</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Check" type="Check.Misc">
+        <xsd:annotation>
+          <xsd:documentation>FOP Code=CK</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Invoice" type="Invoice.Misc">
+        <xsd:annotation>
+          <xsd:documentation>FOP Code=IN</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="GovTransRequest" type="GTR.Misc">
+        <xsd:annotation>
+          <xsd:documentation>FOP Code=GR</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PrepaidTicketAdvice" type="PTA.Misc">
+        <xsd:annotation>
+          <xsd:documentation>FOP Code = PT</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Other" type="OtherFOP.Misc"/>
+    </xsd:choice>
+  </xsd:complexType>
+  <xsd:complexType name="FrequentFlyer.Misc">
+    <xsd:attribute name="number" type="StringLength1to20" use="required">
+      <xsd:annotation>
+        <xsd:documentation>Same as customer loyalty number.  Mapped to: SR05_31_FFN</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="airlineCode" type="AirlineCode" use="required">
+      <xsd:annotation>
+        <xsd:documentation>Airline code of the customer loyalty number.   Mapped to: SR05_31_FAL</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="GTR.Misc">
+    <xsd:sequence>
+      <xsd:element name="Number" type="StringLength1to13"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="GetMiscFeesRQ">
+    <xsd:sequence>
+      <xsd:element name="Header" type="STL_Header.RQ" minOccurs="0"/>
+      <xsd:element name="AgentPOS" type="POS.Misc"/>
+      <xsd:element name="Transaction" type="MiscTransInfo"/>
+      <xsd:element name="Parameters" type="Get.MiscTransInfo" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="MISC_PayloadStdAttributes"/>
+  </xsd:complexType>
+  <xsd:complexType name="GetMiscFeesRS">
+    <xsd:sequence>
+      <xsd:element name="Header" type="STL_Header.RS"/>
+      <xsd:element name="AgentPOS" type="POS.Misc" minOccurs="0"/>
+      <xsd:element name="Transaction" type="MiscTransInfo" minOccurs="0"/>
+      <xsd:element name="Parameters" type="Get.MiscTransInfo" minOccurs="0"/>
+      <xsd:element name="Fees" type="FeeList.Misc" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="MISC_PayloadStdAttributes"/>
+  </xsd:complexType>
+  <xsd:complexType name="GetMiscOverrideRQ">
+    <xsd:sequence>
+      <xsd:element name="Header" type="STL_Header.RQ" minOccurs="0"/>
+      <xsd:element name="AgentPOS" type="POS.Misc"/>
+      <xsd:element name="Transaction" type="MiscTransInfo"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="MISC_PayloadStdAttributes"/>
+  </xsd:complexType>
+  <xsd:complexType name="GetMiscOverrideRS">
+    <xsd:sequence>
+      <xsd:element name="Header" type="STL_Header.RS"/>
+      <xsd:element name="AgentPOS" type="POS.Misc" minOccurs="0"/>
+      <xsd:element name="Transaction" type="MiscTransInfo" minOccurs="0"/>
+      <xsd:element name="Override" type="Override.Misc" minOccurs="0" maxOccurs="99"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="MISC_PayloadStdAttributes"/>
+  </xsd:complexType>
+  <xsd:complexType name="Get.MiscTransInfo">
+    <xsd:sequence>
+      <xsd:element name="OriginCityCode" type="Location.GET" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Origin city code.
+Specify if agent location is not the origin to get the correct ancillary or bag fee. Mapped to: SR05_11_ODEP and SR05_11_CTRY</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DestCityCode" type="Location.GET" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Destination city code.  Needed as a parameter to get the correct ancillary or bag fee. Mapped to: SR05_11_TCTY and SR05_11_TCRY</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ZipCode" type="AlphaNumericStringLength1to5" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A 5-digit ZIP code that may be needed for the US tax calculation, if applicable (e.g. 76123).  Mapped to: SR05_11_ZIPC</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="EffectiveDate" type="xsd:date" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A 5-digit ZIP code that may be needed for the US tax calculation, if applicable (e.g. 76123).  Mapped to: SR05_11_ZIPC</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="PnrLocator" type="UpperCaseAlphaLength6" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A code associated to the reservations of the customer purchasing an ancillary service.  Mapped to: SR05_11_PNR</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="NameRefNumber" type="xsd:decimal" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>A name number associated to the traveller or purchaser in the PNR (e.g. 1.1)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="IATA.Params">
+    <xsd:attribute name="taxExempt" type="xsd:boolean"/>
+    <xsd:attribute name="consumed" type="IATAIndicator"/>
+    <xsd:attribute name="commission" type="IATAIndicator"/>
+    <xsd:attribute name="refundable" type="IATAIndicator.Refundable"/>
+    <xsd:attribute name="interline" type="IATAIndicator"/>
+  </xsd:complexType>
+  <xsd:complexType name="Invoice.Misc">
+    <xsd:sequence>
+      <xsd:element name="Number" type="StringLength1to10"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Location.POS">
+    <xsd:annotation>
+      <xsd:documentation>A location for an airline or agency agent. Can be used to describe the actual, pseudo or home location.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="FlexCityCode">
+        <xsd:attribute name="country" type="CountryCode"/>
+        <xsd:attribute name="province" type="AlphaLength2"/>
+        <xsd:attribute name="number" type="AlphaNumericStringLength1to8">
+          <xsd:annotation>
+            <xsd:documentation>agent station number or agency iata number</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Location.GET">
+    <xsd:annotation>
+      <xsd:documentation>A location for an airline or agency agent. Can be used to describe the actual, pseudo or home location.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="FlexCityCode">
+        <xsd:attribute name="country" type="CountryCode"/>
+        <xsd:attribute name="province" type="AlphaLength2"/>
+        <xsd:attribute name="number" type="AlphaNumericStringLength1to8">
+          <xsd:annotation>
+            <xsd:documentation>agent station number or agency iata number</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MessagingRecords">
+    <xsd:sequence>
+      <xsd:element name="ServiceRequestor" type="MessagingSystemRecord" minOccurs="0"/>
+      <xsd:element name="RequestProxies" type="MessagingSystemRecord" minOccurs="0" maxOccurs="100"/>
+      <xsd:element name="ServiceProvider" type="MessagingSystemRecord" minOccurs="0"/>
+      <xsd:element name="ResponseProxies" type="MessagingSystemRecord" minOccurs="0" maxOccurs="100"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="MessagingSystemRecord">
+    <xsd:annotation>
+      <xsd:documentation>Text field used for intermediaries and proxies to record brief messages about the processes. Attributes record date-time and system identification information.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="Text">
+        <xsd:attribute name="StartTimeStamp" type="xsd:dateTime" use="required">
+          <xsd:annotation>
+            <xsd:documentation>When the system stated processing the message.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="EndTimeStamp" type="xsd:dateTime" use="required">
+          <xsd:annotation>
+            <xsd:documentation>When the system completed processing the message. Format is a sequence of characters of the form: '-'? yyyy '-' mm '-' dd 'T' hh ':' mm ':' ss ('.' s+)? (zzzzzz)?; for example, 2002-10-10T12:00:00+05:00.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="SystemID" type="Identifier" use="required">
+          <xsd:annotation>
+            <xsd:documentation>Unique identifier for the processing system.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="SystemName" type="Identifier" use="required">
+          <xsd:annotation>
+            <xsd:documentation>Common name of the processing system.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="MiscTransInfo">
+    <xsd:complexContent>
+      <xsd:extension base="TransactionInfo">
+        <xsd:attribute name="code" type="TransactionCode.Misc" use="required">
+          <xsd:annotation>
+            <xsd:documentation>A code that defines the type of processing to be applied from the core service - Miscellaneous Sales Receipt (MSR) or Excess Baggage (EXB).  Mapped to: SR05_11_TRT,#SR05_11_W EXB or #SR05_11_WMSR</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="OptionalService">
+    <xsd:sequence>
+      <xsd:element name="EmdType" type="Emd.Type" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>EMD Type. Mapped to: SR05_C5_EMT</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="AirExtraItemNumber" type="xsd:integer" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Air Extra Item Number. Mapped to: SR05_C5_SNB</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="OwningCarrierCode" type="AirlineCode" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Owning Carrier Code. Mapped to: SR05_C5_ALC</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Vendor" type="AlphaNumericStringLength1to4" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Vendor Code. Mapped to: SR05_C5_EVEN</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="IATAParameters" type="IATA.Params" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="commonOptionalServiceAttributes"/>
+    <xsd:attribute name="name" type="StringLength1to70" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>ATPCO Commercial Name. Mapped to SR05AT_C5_ACMN</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="group" type="ATPCO.Group" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>ATPCO group. Mapped to SR05AT_C5_GRP
+Typical groupCD to group value translations:
+BG = Baggage
+FF = Frequent Flyer
+GT = Ground Transportation and Non Air Services
+IE = In Flight Entertainment
+LG = Lounge
+ML = Meal/Beverage
+MD = Medical
+PT = Pets
+SA = Pre-reserved Seat Assignments
+RO = Rule Override
+SB = Standby
+ST = Store
+TS = Travel Services
+UN = Unaccompanied Travel
+UP = Upgrade
+99 = Miscellaneous Fees</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="bookingIndicator" type="BookingIndicator" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Booking indicator. Mapped to SR05_C5_BIND</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="segmentIndicator" type="SegmentIndicator" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Segment or Portion indicator. Mapped to SR05_C5_SIND</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="taxable" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>An taxable indicator.  Mapped to: SR05_C5_IN1</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="userFee" type="xsd:boolean" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Boolean with the following value meanings:
+true: User or agent entered or changed fee (set C5_FGU to N - no fee guarantee)
+false: User or agent did not change or enter fee (set C5_FGU to Y - fee is guaranteed)
+If attribute omitted, follow false behavior (C5_FGU=Y)</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="paper" type="xsd:boolean">
+      <xsd:annotation>
+        <xsd:documentation>boolean indicator to indicate this to be used to create special paper document</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="OptionalService.GetMiscFees">
+    <xsd:attributeGroup ref="commonOptionalServiceAttributes"/>
+  </xsd:complexType>
+  <xsd:complexType name="OriginDestinationCityType">
+    <xsd:attribute name="Origin" type="CityCode"/>
+    <xsd:attribute name="Destination" type="CityCode"/>
+  </xsd:complexType>
+  <xsd:complexType name="OriginDestinationCountryType">
+    <xsd:attribute name="Origin" type="CountryCode"/>
+    <xsd:attribute name="Destination" type="CountryCode"/>
+  </xsd:complexType>
+  <xsd:complexType name="OtherFOP.Misc">
+    <xsd:sequence>
+      <xsd:element name="Detail" type="StringLength1to50" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Override.Misc">
+    <xsd:sequence>
+      <xsd:element name="EffectiveDate" type="xsd:date" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The effectivity date when override code can be used.  Mapped to:  SR05_C0_EFFD</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DiscontinueDate" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The discontinue date when the override code can be used.  Mapped to:  SR05_C0_DSCD</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="9"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:element>
+      <xsd:element name="CarrierOverride" type="AlphaNumericStringLength2to3" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Validating carrier override for host partitions containing more than one carrier (ie LAN). Mapped to:
+SR05_11_OVR, SR05_11_OVRE</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+    <xsd:attribute name="reasonCode" type="AlphaNumericStringLength2" use="required">
+      <xsd:annotation>
+        <xsd:documentation>Code associated to the reason why a fee override is applied.  Mapped to: SR05_C0_RCOD</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="reasonDesc" type="StringLength1to21" use="required">
+      <xsd:annotation>
+        <xsd:documentation>Text that describes the reason why a fee override is applied.  Mapped to: SR05_C0_DESC</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="option" type="AlphaNumericStringLength1">
+      <xsd:annotation>
+        <xsd:documentation>Option indicator associated to the override or reason code.  Values can be Y - remarks, T - ticket.  Mapped to:  SR05_C0_EXLS</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="POS.Misc">
+    <xsd:sequence>
+      <xsd:element name="AAA" type="Location.POS" minOccurs="0"/>
+      <xsd:element name="Location" type="Location.POS" minOccurs="0"/>
+      <xsd:element name="Home" type="Location.POS" minOccurs="0"/>
+      <xsd:element name="Actual" type="Location.POS" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="company" type="UpperCaseAlphaNumericLength1to3" use="required"/>
+    <xsd:attribute name="lniata" type="AlphaNumericStringLength6" use="required"/>
+    <xsd:attribute name="sine" type="StringLength1to3"/>
+    <xsd:attribute name="dutyCode" type="DutyCodeList"/>
+  </xsd:complexType>
+  <xsd:complexType name="PTA.Misc">
+    <xsd:sequence>
+      <xsd:element name="Number" type="StringLength1to14"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Parameters">
+    <xsd:annotation>
+      <xsd:documentation>Name value pairs of parameters where the contents are the value associated with the name. Parameters are for deployment and operational flexibility and should not be relied upon in service design. Revisions to the service should migrate parameters into the message payload or message subject and action values.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="Text">
+        <xsd:attribute name="Name" type="Text"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="Payment.Misc">
+    <xsd:sequence>
+      <xsd:element name="Amount" type="Amount"/>
+      <xsd:element name="FormOfPayment" type="FormOfPaymentChoice.Misc"/>
+      <xsd:element name="FormOfIdentification" type="FormOfIdentification.Misc" minOccurs="0" maxOccurs="4"/>
+      <xsd:element name="Remarks" type="Text" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="refNumber">
+      <xsd:annotation>
+        <xsd:documentation>Payment reference number associated to service Fee(s) (//Fees/Linked/Fee/FOPDetails/FOP/@paymentRefNumber) that they were paid for. Mapped to ??SR05_??</xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:integer">
+          <xsd:minInclusive value="1"/>
+          <xsd:maxInclusive value="2"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="ResultRecord">
+    <xsd:sequence>
+      <xsd:element name="ErrorSource" type="SystemNameAndId" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>endpoint address (url) or system name of the system that could not be reached. For application errors, the attribute may be omitted or identify a system the application is dependent upon that failed to respond.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Status" type="ErrorOrSuccessCode"/>
+      <xsd:element name="CompletionStatus" type="CompletionCodes" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>An indicator to reflect the severity of this condition reported in the result record.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="System" type="SystemNameAndId" minOccurs="0"/>
+      <xsd:element name="SystemSpecificResults" type="SystemSpecificResults" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="conversationID" type="Identifier">
+      <xsd:annotation>
+        <xsd:documentation>The ConversationId element is a string identifying the set of related messages that make up a conversation between two Parties. The Party initiating a conversation determines the value of the ConversationId element that shall be reflected in all messages pertaining to that conversation. It remains constant for all messages within a conversation.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="messageId" type="Identifier">
+      <xsd:annotation>
+        <xsd:documentation>id is a unique identifier for this error message</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="version" type="Identifier">
+      <xsd:annotation>
+        <xsd:documentation>version should match the version of the namespace and schema.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="timeStamp" type="xsd:dateTime">
+      <xsd:annotation>
+        <xsd:documentation>Date and time when the result record was created.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="STL_Header.RQ">
+    <xsd:annotation>
+      <xsd:documentation>Sabre Standard Payload Header. Information in the header is intended to separate transport and processing information from actual message data. Header information may be replicated in the messaging system header (SOAP or JMS header). This data is inteded for use with content-based routing and other tasks asscociated with integration.  NOTE: messaging and transport systems may and should add content to the header whereas they should never change the actual message subject contents.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Action" type="Text.Short" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Details, qualifiers and parameters to the message action verb.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Subject" type="Text.Short" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Details, qualifiers and parameters to the message subject noun. Typically will be used to request level of detail desired in the response or parameters not caputred by the query form of the noun.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Messaging" type="MessagingRecords" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Messaging section provides an area for each system interacting with the message to record a brief message about thier interactions. Service proxies and utility services such as transformation and validation should use this area to record when they processed the message and the resulting status.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Parameters" type="Parameters" minOccurs="0" maxOccurs="100">
+        <xsd:annotation>
+          <xsd:documentation>Generalized name-value pairs. These parameters are intended for integration specific use only duriing development and testing. These parameters must not be relied upon for production operation.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Security" type="Text.Long" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attribute name="conversationID" type="Identifier">
+      <xsd:annotation>
+        <xsd:documentation>The ConversationId element is a string identifying the set of related messages that make up a conversation between two Parties. The Party initiating a conversation determines the value of the ConversationId element that shall be reflected in all messages pertaining to that conversation. It remains constant for all messages within a conversation.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="messageID" type="Identifier">
+      <xsd:annotation>
+        <xsd:documentation>The MessageId element is a globally unique identifier for each message [see RFC2822]. It is an unique message identifier that refers to a particular version of a particular message.  The uniqueness of the message identifier should be guaranteed by the host that generates it.  This message identifier is intended to be machine readable and not necessarily meaningful to humans.  A message identifier pertains to exactly one instantiation of a particular message; subsequent revisions to the message each receive new message identifiers.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="version" type="Identifier"/>
+    <xsd:attribute name="timeStamp" type="xsd:dateTime">
+      <xsd:annotation>
+        <xsd:documentation>Date and time when the result record was created.</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="diagnosticLevel" type="DiagnosticLevels"/>
+    <xsd:attribute name="diagnosticData" type="Text.Long"/>
+  </xsd:complexType>
+  <xsd:complexType name="STL_Header.RS">
+    <xsd:annotation>
+      <xsd:documentation>Sabre Standard Payload Header. Information in the header is intended to separate transport and processing information from actual message data. Header information may be replicated in the messaging system header (SOAP or JMS header). This data is inteded for use with content-based routing and other tasks asscociated with integration.  NOTE: messaging and transport systems may and should add content to the header whereas they should never change the actual message subject contents.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="Results" type="ResultRecord">
+        <xsd:annotation>
+          <xsd:documentation>Response message header Results are used to exchange information about the nature of a failure or success. This record must be provided in successful service invocations. May also contain system specific error, result and diagnostic data.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Messaging" type="MessagingRecords" minOccurs="0"/>
+      <xsd:element name="Parameters" type="Parameters" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Generalized name-value pairs. These parameters are intended for integration specific use only duriing development and testing. These parameters must not be relied upon for production operation.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="SystemNameAndId">
+    <xsd:annotation>
+      <xsd:documentation>System name plus an Id attribute used to uniquily identify the specific system.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:simpleContent>
+      <xsd:extension base="Identifier">
+        <xsd:attribute name="id" type="Identifier"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <xsd:complexType name="SystemSpecificResults">
+    <xsd:sequence>
+      <xsd:element name="ErrorMessage" type="ErrorMessage" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Application specific Error code and Message. A textual description to provide more information about the specific error.
+TODO - make into simple content type with code as numeric attribute
+TODO - shorten names on TimeStamps</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ShortText" type="Text.Short" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>An abbreviated version of the error in textual format.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="Element" type="Text.Long" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>If present, this attribute may identify an unknown or misspelled tag that caused an error in processing. It is recommended that the Tag attribute use XPath notation to identify the location of a tag in the event that more than one tag of the same name is present in the document. Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="RecordID" type="Identifier" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>If present, this attribute allows for batch processing and the identification of the record that failed amongst a group of records. This value may contain a concatenation of a unique failed transaction ID with specific record(s) associated with that transaction.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DocURL" type="xsd:anyURI" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>If present, this attribute refers to an online description of the error that occurred.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DiagnosticResults" type="DiagnosticResults" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>For data not defined elsewhere in the results record. Structure of the contents must be defined elsewhere in the target schema namespace.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Tax.Misc">
+    <xsd:sequence>
+      <xsd:element name="Amount" type="Amount"/>
+    </xsd:sequence>
+    <xsd:attribute name="exempt" type="xsd:boolean" default="false">
+      <xsd:annotation>
+        <xsd:documentation>An indicator that a tax has been exempted.  Mapped to:</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="code" type="AlphaNumericStringLength2to3" use="required">
+      <xsd:annotation>
+        <xsd:documentation>A code that applies to the tax (e.g, US, ZP).  Mapped to:  SR05_C2_TCOD</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:complexType>
+  <xsd:complexType name="TransactionInfo">
+    <xsd:annotation>
+      <xsd:documentation>Base type for transaction specific and tracking information. Intended to be extended when used in service schemas.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:sequence>
+      <xsd:element name="ID" type="StringLength0to128" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>Transaction Identifier created by service consumer.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="Valuation">
+    <xsd:sequence>
+      <xsd:element name="TotalDeclaredValue" type="Amount">
+        <xsd:annotation>
+          <xsd:documentation>The value of an item for purposes of purchasing additional insurance of that item (e.g. high-value paint).  Mapped to: SR05_C1_DAMT</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="ClassOfService" type="AlphaNumericStringLength1">
+        <xsd:annotation>
+          <xsd:documentation>For international travel, the class of service needed for calculating the cost of the insurance.  Mapped to: SR05_C1_CSER</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="WeightCode" type="WeightCode">
+        <xsd:annotation>
+          <xsd:documentation>The weight (kilos, pounds) of the item needed for calculation.  Mapped to:  SR05_C1_WCDE</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="TotalWeight" type="NumericLength1to2">
+        <xsd:annotation>
+          <xsd:documentation>Total weight of the item.  Mapped to: SR05_C1_TWGT</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+    </xsd:sequence>
+  </xsd:complexType>
+  <xsd:complexType name="WaiveMiscFeeRQ">
+    <xsd:sequence>
+      <xsd:element name="Header" type="STL_Header.RQ" minOccurs="0"/>
+      <xsd:element name="AgentPOS" type="POS.Misc"/>
+      <xsd:element name="Transaction" type="MiscTransInfo"/>
+      <xsd:element name="Fees" type="FeesType.Override" minOccurs="0" maxOccurs="999"/>
+      <xsd:element name="TotalCost" type="Amount" minOccurs="0">
+        <xsd:annotation>
+          <xsd:documentation>The grand total cost of all the purchases made.  The calculated cost should match the total payment amount (single or multiple forms of payment)</xsd:documentation>
+        </xsd:annotation>
+      </xsd:element>
+      <xsd:element name="DetailLevel" type="RequestedDetailLevel"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="MISC_PayloadStdAttributes"/>
+  </xsd:complexType>
+  <xsd:complexType name="WaiveMiscFeeRS">
+    <xsd:sequence>
+      <xsd:element name="Header" type="STL_Header.RS"/>
+      <xsd:element name="AgentPOS" type="POS.Misc" minOccurs="0"/>
+      <xsd:element name="Transaction" type="MiscTransInfo" minOccurs="0"/>
+      <xsd:element name="Fees" type="FeesType.Override" minOccurs="0" maxOccurs="999"/>
+      <xsd:element name="TotalCost" type="Amount" minOccurs="0"/>
+    </xsd:sequence>
+    <xsd:attributeGroup ref="MISC_PayloadStdAttributes"/>
+  </xsd:complexType>
+  <xsd:simpleType name="AirlineCode">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[A-Z0-9]{2}[A-Z]?"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AlphaLength2">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[a-zA-Z]{2}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AlphaNumericStringLength1">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9a-zA-Z]{1}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AlphaNumericStringLength1to25">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9a-zA-Z]{1,25}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AlphaNumericStringLength1to5">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9a-zA-Z]{1,5}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AlphaNumericStringLength1to4">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9a-zA-Z]{1,4}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AlphaNumericStringLength1to8">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9a-zA-Z]{1,8}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AlphaNumericStringLength2">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9a-zA-Z]{2}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AlphaNumericStringLength2to3">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9a-zA-Z]{2,3}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AlphaNumericStringLength4">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9a-zA-Z]{4}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="AlphaNumericStringLength6">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9a-zA-Z]{6}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ATPCO.Group.Enum">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Baggage"/>
+      <xsd:enumeration value="Frequent Flyer"/>
+      <xsd:enumeration value="Ground Transportation and Non Air Services"/>
+      <xsd:enumeration value="In Flight Entertainment"/>
+      <xsd:enumeration value="Lounge"/>
+      <xsd:enumeration value="Meal/Beverage"/>
+      <xsd:enumeration value="Medical"/>
+      <xsd:enumeration value="Pets"/>
+      <xsd:enumeration value="Pre-reserved Seat Assignments"/>
+      <xsd:enumeration value="Rule Override"/>
+      <xsd:enumeration value="Standby"/>
+      <xsd:enumeration value="Store"/>
+      <xsd:enumeration value="Travel Services"/>
+      <xsd:enumeration value="Unaccompanied Travel"/>
+      <xsd:enumeration value="Upgrade"/>
+      <xsd:enumeration value="Miscellaneous Fees"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ATPCO.Group.Code">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9a-zA-Z]{2}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ATPCO.Group">
+    <xsd:union memberTypes="ATPCO.Group.Enum ATPCO.Group.Code"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="BookingIndicator">
+    <xsd:annotation>
+      <xsd:documentation>Booking indicator. Possible values: SSR, Auxiliary, Display, No Booking</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="SSR"/>
+      <xsd:enumeration value="AUX"/>
+      <xsd:enumeration value="DSP"/>
+      <xsd:enumeration value="NOB"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="CabinType.3Chars">
+    <xsd:restriction base="UpperCaseAlphaLength1to3"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="CityCode">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[a-zA-Z]{3}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="CompletionCodes">
+    <xsd:restriction base="xsd:token">
+      <xsd:enumeration value="NotProcessed"/>
+      <xsd:enumeration value="Complete"/>
+      <xsd:enumeration value="Incomplete"/>
+      <xsd:enumeration value="Unknown"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="CountryCode">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[a-zA-Z]{2}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="CurrencyCode">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9a-zA-Z]{3}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="DiagnosticLevels">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Mock">
+        <xsd:annotation>
+          <xsd:documentation>Return a sample message without invoking service logic.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="Simulate">
+        <xsd:annotation>
+          <xsd:documentation>Compute response without making changes to service data, state or status. Test Mock access to de</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="DutyCodeList">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="1"/>
+      <xsd:enumeration value="2"/>
+      <xsd:enumeration value="4"/>
+      <xsd:enumeration value="5"/>
+      <xsd:enumeration value="6"/>
+      <xsd:enumeration value="7"/>
+      <xsd:enumeration value="8"/>
+      <xsd:enumeration value="9"/>
+      <xsd:enumeration value="#"/>
+      <xsd:enumeration value="@"/>
+      <xsd:enumeration value="'"/>
+      <xsd:enumeration value="*"/>
+      <xsd:enumeration value="-"/>
+      <xsd:enumeration value="/"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Emd.Type">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Standalone"/>
+      <xsd:enumeration value="Associated"/>
+      <xsd:enumeration value="Reference"/>
+      <xsd:enumeration value="Other"/>
+      <xsd:enumeration value="ElectronicTicket"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ErrorOrSuccessCode">
+    <xsd:restriction base="xsd:NMTOKEN">
+      <xsd:enumeration value="TransportError">
+        <xsd:annotation>
+          <xsd:documentation>The</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="InterfaceError">
+        <xsd:annotation>
+          <xsd:documentation>The</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="ApplicationError">
+        <xsd:annotation>
+          <xsd:documentation>The</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="BusinessLogicError">
+        <xsd:annotation>
+          <xsd:documentation>The</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="Success"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="FlexCityCode">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="([a-zA-Z]{3})?"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="FlightNumber">
+    <xsd:union memberTypes="_flightNumberPattern _flightNumberLiterals"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="IATAIndicator">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Y"/>
+      <xsd:enumeration value="N"/>
+      <xsd:enumeration value="N/A"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="IATAIndicator.Refundable">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Y"/>
+      <xsd:enumeration value="N"/>
+      <xsd:enumeration value="N/A"/>
+      <xsd:enumeration value="R"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Identifier">
+    <xsd:restriction base="StringLength1to255"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="MMYYDate">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="(0[1-9]|1[0-2])[0-9][0-9]"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="NumericLength1to2">
+    <xsd:restriction base="xsd:integer">
+      <xsd:minInclusive value="1"/>
+      <xsd:maxInclusive value="99"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="NumericStringLength1to5">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9]{1,5}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="EmptyOrNumericStringLength7">
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:pattern value="[0-9]{7}"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:length value="0"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="NumericStringLength1to19">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9]{1,19}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="NumericStringLength1to20">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9]{1,20}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Number.CreditCard">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="25"/>
+      <xsd:pattern value="[A-Z0-9]{8,25}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Number.ClearCreditCard">
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="25"/>
+      <xsd:pattern value="[0-9]{8,25}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="PNRName">
+    <xsd:annotation>
+      <xsd:documentation>Used for Name fields targeted to the PNR</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="100"/>
+      <xsd:pattern value="[A-Z]+[ A-Z]*"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="PaymentCardCode">
+    <xsd:union memberTypes="_PaymentCardType _PaymentCardType_Other"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="PaymentCardNumber">
+    <xsd:restriction base="AlphaNumericStringLength1to25"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="PrimaryIdCodeList">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="DL"/>
+      <xsd:enumeration value="MI"/>
+      <xsd:enumeration value="ID"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="ProperName">
+    <xsd:restriction base="StringLength1to100"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="RequestedDetailLevel">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="Full"/>
+      <xsd:enumeration value="Summary"/>
+      <xsd:enumeration value="Acknowledgement"/>
+      <xsd:enumeration value="None">
+        <xsd:annotation>
+          <xsd:documentation>Specifies that the fare is for a roundtrip.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="SecondaryIdCodeList">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="CC"/>
+      <xsd:enumeration value="AC"/>
+      <xsd:enumeration value="EI"/>
+      <xsd:enumeration value="PP"/>
+      <xsd:enumeration value="AR"/>
+      <xsd:enumeration value="MI"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="SegmentIndicator">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="S"/>
+      <xsd:enumeration value="P"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength0to1023">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="0"/>
+      <xsd:maxLength value="1023"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength0to128">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="0"/>
+      <xsd:maxLength value="128"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength0to4096">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="0"/>
+      <xsd:maxLength value="4096"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength13to15">
+    <xsd:annotation>
+      <xsd:documentation>Used for Character Strings, length 13 to 15.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="13"/>
+      <xsd:maxLength value="15"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to10">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="10"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to100">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="100"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to128">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="128"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to13">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="13"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to14">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="14"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to15">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="15"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to18">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="18"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to20">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="20"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to21">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="21"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to25">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="25"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to255">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="255"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to3">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="3"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to50">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="50"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to6">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="6"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to8">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="8"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to60">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="60"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength1to70">
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="1"/>
+      <xsd:maxLength value="70"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="StringLength6">
+    <xsd:restriction base="xsd:string">
+      <xsd:length value="6"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="Text">
+    <xsd:restriction base="StringLength1to255"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="Text.Long">
+    <xsd:annotation>
+      <xsd:documentation>A field text characters and no other constraints.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="StringLength0to4096"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="Text.Short">
+    <xsd:annotation>
+      <xsd:documentation>A field of text characters and no other constraints.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="StringLength1to128"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="TransactionCode.Misc">
+    <xsd:annotation>
+      <xsd:documentation>TransactionCode: MSR-Miscellaneous Sales Receipt, EXB-Excess or Extra Bag, EMD-Electronic Miscellaneous Documents</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="MSR"/>
+      <xsd:enumeration value="EXB"/>
+      <xsd:enumeration value="EMD"/>
+      <xsd:enumeration value="XEMD"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="UpperCaseAlpha">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[A-Z]+"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="UpperCaseAlphaLength1to2">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[A-Z]{1,2}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="UpperCaseAlphaLength1to3">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[A-Z]{1,3}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="UpperCaseAlphaLength6">
+    <xsd:restriction base="UpperCaseAlpha">
+      <xsd:length value="6"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="UpperCaseAlphaNumericLength1to3">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[A-Z0-9]{1,3}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="UpperCaseAlphaNumericLength3">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[A-Z0-9]{3}"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="WeightCode">
+    <xsd:annotation>
+      <xsd:documentation>codes:L=Pounds, K=Kilos, P=Pieces, N=Nil</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="L"/>
+      <xsd:enumeration value="K"/>
+      <xsd:enumeration value="P"/>
+      <xsd:enumeration value="N"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="_PaymentCardType">
+    <xsd:restriction base="UpperCaseAlphaLength1to2">
+      <xsd:enumeration value="AX">
+        <xsd:annotation>
+          <xsd:documentation>American Express</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="BC">
+        <xsd:annotation>
+          <xsd:documentation>Bank Card</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="BL">
+        <xsd:annotation>
+          <xsd:documentation>Carte Bleu</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="CB">
+        <xsd:annotation>
+          <xsd:documentation>Carte Blanche</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="DN">
+        <xsd:annotation>
+          <xsd:documentation>Diners Club</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="DS">
+        <xsd:annotation>
+          <xsd:documentation>Discover Card</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="EC">
+        <xsd:annotation>
+          <xsd:documentation>Eurocard</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="JC">
+        <xsd:annotation>
+          <xsd:documentation>Japanese Credit Bureau Credit Card</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="MA">
+        <xsd:annotation>
+          <xsd:documentation>Maestro</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="MC">
+        <xsd:annotation>
+          <xsd:documentation>Master Card</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="TP">
+        <xsd:annotation>
+          <xsd:documentation>Universal Air Travel Card</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="VI">
+        <xsd:annotation>
+          <xsd:documentation>Visa</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="_PaymentCardType_Other">
+    <xsd:restriction base="UpperCaseAlphaLength1to2"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="_amount">
+    <xsd:restriction base="xsd:decimal">
+      <xsd:fractionDigits value="3"/>
+      <xsd:maxInclusive value="100000000"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="_flightNumberLiterals">
+    <xsd:annotation>
+      <xsd:documentation>This private type enumerates flight number literals used for ground links and open segments in an itinerary.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="OPEN">
+        <xsd:annotation>
+          <xsd:documentation>Used in lieu of a flight number when a specific flight number is unknown but service is present.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="ARNK">
+        <xsd:annotation>
+          <xsd:documentation>Used in lieu of a flight number when surface transportation is used when there is a break in the continuity of the flight itinerary.</xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="_flightNumberPattern">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[0-9]{1,4}[A-Z]?"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:group name="Fees.Association">
+    <xsd:annotation>
+      <xsd:documentation>Associating Fees</xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice>
+      <xsd:element name="Linked" type="Fees.Linked"/>
+      <xsd:element name="Grouped" type="Fees.Grouped"/>
+    </xsd:choice>
+  </xsd:group>
+  <xsd:group name="Fees.Association.Override">
+    <xsd:annotation>
+      <xsd:documentation>Associating Fees</xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice>
+      <xsd:element name="Linked" type="Fees.Linked.Override"/>
+      <xsd:element name="Grouped" type="Fees.Grouped.Override"/>
+    </xsd:choice>
+  </xsd:group>
+  <xsd:attributeGroup name="MISC_PayloadStdAttributes">
+    <xsd:attribute name="version" type="xsd:string" use="required">
+      <xsd:annotation>
+        <xsd:documentation>Versioned message value</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="primaryLangID" type="xsd:language"/>
+    <xsd:attribute name="altLangID" type="xsd:language"/>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="commonOptionalServiceAttributes">
+    <xsd:attribute name="RFIC" type="AlphaNumericStringLength1" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Reason for issuance code. Mapped to: SR05_C5_RFIC or C1_RFIC for GetMiscFees response</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="subCode" type="StringLength1to3" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Reason for issuance sub-code. Mapped to: SR05_C5_RFISC or C1_SRFI for GetMiscFees</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="ssrCode" type="AlphaNumericStringLength4" use="optional">
+      <xsd:annotation>
+        <xsd:documentation>Service code in the PNR associated to the item. Mapped to SR05_C5_SSR or C1_SCOD for GetMiscFees response</xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+</xsd:schema>

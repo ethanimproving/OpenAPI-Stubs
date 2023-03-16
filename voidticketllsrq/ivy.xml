@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns:e="http://ant.apache.org/ivy/extra"
+     xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+   <info organisation="com.aa.etds.sws" module="voidticketllsrq" />
+
+   <configurations>
+      <include file="../common/ivy-configurations.xml" />
+   </configurations>
+
+   <publications>
+      <artifact type="jar" ext="pom"/>
+      <artifact type="jar" ext="jar"/>
+      <artifact conf="sources" type="source" ext="jar" e:classifier="sources"/>
+   </publications>
+
+   <dependencies>
+      <!-- JAX-WS API implementation (as of 02/27/2017 iTKTS requires 2.1) -->
+      <dependency org="javax.xml.ws" name="jaxws-api" rev="2.2.11" />
+
+      <!-- Ant taskdef libraries (required during build) -->
+      <dependency org="com.sun.xml.ws" name="jaxws-tools" rev="2.2.10"
+                  conf="antlibs->default" />
+      <dependency org="ant-contrib" name="ant-contrib" rev="1.0b3"
+                  conf="antlibs->master" />
+      <dependency org="org.sonarsource.scanner.ant" name="sonarqube-ant-task"
+                  rev="2.5" conf="antlibs->default" />
+   </dependencies>
+
+</ivy-module>
