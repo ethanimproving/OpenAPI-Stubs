@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:sws="http://webservices.sabre.com/sabreXML/2011/10"
 		   xmlns:xs="http://www.w3.org/2001/XMLSchema"
-		   xmlns:stl="http://services.sabre.com/STL/v02"
+		   xmlns:stl="http://services.sabre.com/STL/v01"
 		   targetNamespace="http://webservices.sabre.com/sabreXML/2011/10"
 		   elementFormDefault="qualified">
-	<xs:import namespace="http://services.sabre.com/STL/v02" schemaLocation="STL_For_SabreProtocol_v.1.2.0.xsd"/>
-	<xs:include schemaLocation="sws_common.xsd"/>
+	<xs:import namespace="http://services.sabre.com/STL/v01" schemaLocation="STL_For_ServiceProtocol.xsd"/>
 	<xs:element name="VoidTicketRS">
 		<xs:complexType>
 			<xs:sequence>

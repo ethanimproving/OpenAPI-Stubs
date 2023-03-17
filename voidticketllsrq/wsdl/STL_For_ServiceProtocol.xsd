@@ -2,9 +2,9 @@
 <xsd:schema
         attributeFormDefault="unqualified"
         elementFormDefault="qualified"
-        targetNamespace="http://services.sabre.com/STL/v02"
-        xmlns="http://services.sabre.com/STL/v02"
-        xmlns:STL="http://services.sabre.com/STL/v02"
+        targetNamespace="http://services.sabre.com/STL/v01"
+        xmlns="http://services.sabre.com/STL/v01"
+        xmlns:STL="http://services.sabre.com/STL/v01"
         xmlns:stlh="http://services.sabre.com/STL_Header/v120"
         xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <xsd:annotation>
@@ -78,46 +78,10 @@
     <xsd:sequence>
       <xsd:element name="SystemSpecificResults" type="SystemSpecificResults" minOccurs="0" maxOccurs="99"/>
     </xsd:sequence>
-    <xsd:attribute name="type" type="stlh:ErrorType">
-      <xsd:annotation>
-        <xsd:documentation>An indication of the source of error when processing the request.</xsd:documentation>
-      </xsd:annotation>
-    </xsd:attribute>
     <xsd:attribute name="timeStamp" type="xsd:dateTime"/>
   </xsd:complexType>
   <xsd:complexType name="SystemSpecificResults">
     <xsd:sequence>
-      <xsd:element name="HostCommand" type="HostCommand" minOccurs="0">
-        <xsd:annotation>
-          <xsd:documentation>Host system command run to create this result.</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="Message" type="stlh:Message.Condition" minOccurs="0" maxOccurs="99">
-        <xsd:annotation>
-          <xsd:documentation>Application specific code and Message. A textual description to provide more 
-					information about the specific condition, warning or error  with code attribute as numeric value.</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="ShortText" type="stlh:Text.Short" minOccurs="0">
-        <xsd:annotation>
-          <xsd:documentation>An abbreviated version of the error in textual format.</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="Element" type="stlh:Text.Long" minOccurs="0">
-        <xsd:annotation>
-          <xsd:documentation>If present, this attribute may identify an unknown or misspelled tag that caused 
-					an error in processing. It is recommended that the Tag attribute use XPath notation to identify the 
-					location of a tag in the event that more than one tag of the same name is present in the document. 
-					Alternatively, the tag name alone can be used to identify missing data [Type=ReqFieldMissing].</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
-      <xsd:element name="RecordID" type="stlh:Identifier" minOccurs="0">
-        <xsd:annotation>
-          <xsd:documentation>If present, this attribute allows for batch processing and the identification of the 
-					record that failed amongst a group of records. This value may contain a concatenation of a unique failed 
-					transaction ID with specific record(s) associated with that transaction.</xsd:documentation>
-        </xsd:annotation>
-      </xsd:element>
       <xsd:element name="DocURL" type="xsd:anyURI" minOccurs="0">
         <xsd:annotation>
           <xsd:documentation>If present, this attribute refers to an online description of the error that occurred.</xsd:documentation>
@@ -125,12 +89,5 @@
       </xsd:element>
     </xsd:sequence>
     <xsd:attribute name="timeStamp" type="xsd:dateTime"/>
-  </xsd:complexType>
-  <xsd:complexType name="HostCommand">
-    <xsd:simpleContent>
-      <xsd:extension base="stlh:Text.Long">
-        <xsd:attribute name="LNIATA" type="xsd:string" use="optional"/>
-      </xsd:extension>
-    </xsd:simpleContent>
   </xsd:complexType>
 </xsd:schema>
