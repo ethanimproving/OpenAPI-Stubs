@@ -1,18 +1,3 @@
-# SWSStubs Project
-
-Rubens Gomes created this Git Repo project as a placeholder for Sabre Web Services WSDL 
-and XSD files to be compiled to Java classes.  Notice that this project is built using
-"Ant/Ivy" scripts that Rubens wrote back in the beginning of 2017.  The common scripts
-are placed in another Git Repo project called "common" which was incorporated into 
-this SWSStubs project as a "sub-module.
-
-## Requirements
-
-- You must have "Ant" binary (version 1.10.11+) and "Ivy" (Jar version 2.5.0+).  The "Ivy"
-  jar must be copied to the ${ANT_HOME}/lib folder.
-
-- You must use JDK 8.  This project does not support builds using Java 9 or higher.
-
 ## Cloning Project
 
 You should do the following steps to clone this project:
