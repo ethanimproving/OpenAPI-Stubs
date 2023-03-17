@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://services.sabre.com/STL/v01" xmlns="http://services.sabre.com/STL/v01" xmlns:STL="http://services.sabre.com/STL/v01" xmlns:stlh="http://services.sabre.com/STL_Header/v120" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema
+        attributeFormDefault="unqualified"
+        elementFormDefault="qualified"
+        targetNamespace="http://services.sabre.com/STL/v02"
+        xmlns="http://services.sabre.com/STL/v02"
+        xmlns:STL="http://services.sabre.com/STL/v02"
+        xmlns:stlh="http://services.sabre.com/STL_Header/v120"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <xsd:annotation>
     <xsd:documentation>October 11, 2011 - added ShortText to SystemSpecificResults.
   		

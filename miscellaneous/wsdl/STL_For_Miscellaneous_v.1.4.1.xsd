@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--edited with XMLSpy v2017 rel. 3 (x64) (http://www.altova.com) by Ravi (Sabre GLBL Inc.)-->
+<!-- TODO: Change target namespace to differentiate from void air ticket -->
 <xsd:schema targetNamespace="http://services.sabre.com/STL/v01"
   elementFormDefault="qualified" attributeFormDefault="unqualified"
   version="1.4.0" xmlns="http://services.sabre.com/STL/v01"

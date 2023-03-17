@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:sws="http://webservices.sabre.com/sabreXML/2011/10" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://webservices.sabre.com/sabreXML/2011/10" elementFormDefault="qualified">
+<xs:schema
+		xmlns:sws="http://webservices.sabre.com/sabreXML/2011/10"
+		xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		targetNamespace="http://webservices.sabre.com/sabreXML/2011/10"
+		elementFormDefault="qualified">
 	<xs:include schemaLocation="sws_common.xsd"/>
 	<xs:element name="VoidTicketRQ">
 		<xs:complexType>

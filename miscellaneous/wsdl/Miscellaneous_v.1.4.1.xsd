@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--edited with XMLSpy v2015 rel. 4 sp1 (x64) (http://www.altova.com) by Bartosz Wieczorek (SABRE GLBL INC)-->
-<xsd:schema targetNamespace="http://www.sabre.com/ns/Ticketing/misc/1.0" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.4.1" xmlns="http://www.sabre.com/ns/Ticketing/misc/1.0" xmlns:misc="http://www.sabre.com/ns/Ticketing/misc/1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:STL="http://services.sabre.com/STL/v01">
+<xsd:schema targetNamespace="http://www.sabre.com/ns/Ticketing/misc/1.0"
+            elementFormDefault="qualified"
+            attributeFormDefault="unqualified"
+            version="1.4.1"
+            xmlns="http://www.sabre.com/ns/Ticketing/misc/1.0"
+            xmlns:misc="http://www.sabre.com/ns/Ticketing/misc/1.0"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:STL="http://services.sabre.com/STL/v01"> <!-- Imported from target namespace in STL_For_Miscellaneous_v.1.4.1.xsd -->
+
   <xsd:import namespace="http://services.sabre.com/STL/v01" schemaLocation="STL_For_Miscellaneous_v.1.4.1.xsd"/>
   <xsd:element name="CalculateTotalCostRQ" type="STL:CalculateTotalCostRQ"/>
   <xsd:element name="CalculateTotalCostRS" type="STL:CalculateTotalCostRS"/>

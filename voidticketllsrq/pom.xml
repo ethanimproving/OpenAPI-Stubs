@@ -31,6 +31,15 @@
       ]]>
         </sonar.exclusions>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+    </dependencies>
+
     <build>
 
 
