@@ -1,111 +1,146 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                       http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.aa.etds.build-tools.library</groupId>
+        <artifactId>library-pom</artifactId>
+        <version>6.0</version>
+    </parent>
+
+    <groupId>com.aa.etds</groupId>
+    <artifactId>sws-stubs</artifactId>
+    <version>2.0.0</version>
+    <packaging>pom</packaging>
+
+    <name>sws-stubs</name>
+    <description>A library of plain Sabre data model classes.</description>
+
+    <properties>
+
+        <!-- skip Sonar analysis on plain data types -->
+        <sonar.exclusions>
+            <![CDATA[
+         **/header/**,
+         **/request/**,
+         **/response/**
+      ]]>
+        </sonar.exclusions>
+    </properties>
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/jakarta.xml.ws/jakarta.xml.ws-api -->
+        <dependency>
+            <groupId>jakarta.xml.ws</groupId>
+            <artifactId>jakarta.xml.ws-api</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+    </dependencies>
+
+    <modules>
+        <module>miscellaneous</module>
+        <module>voidticketllsrq</module>
+    </modules>
 
 
-   <modelVersion>4.0.0</modelVersion>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.0</version>
+                    <executions>
+                        <execution>
+                            <id>default-testResources</id>
+                            <phase>none</phase>
+                            <goals>
+                                <goal>testResources</goal>
+                            </goals>
+                            <configuration>
+                                <nonFilteredFileExtensions>
+                                    <nonFilteredFileExtension>class</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>jar</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>jks</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>p12</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>wsdl</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>xml</nonFilteredFileExtension>
+                                </nonFilteredFileExtensions>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>default-resources</id>
+                            <phase>none</phase>
+                            <goals>
+                                <goal>resources</goal>
+                            </goals>
+                            <configuration>
+                                <nonFilteredFileExtensions>
+                                    <nonFilteredFileExtension>class</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>jar</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>jks</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>p12</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>wsdl</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>xml</nonFilteredFileExtension>
+                                </nonFilteredFileExtensions>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>TaR-processing-resources</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>resources</goal>
+                            </goals>
+                            <configuration>
+                                <nonFilteredFileExtensions>
+                                    <nonFilteredFileExtension>class</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>jar</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>jks</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>p12</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>wsdl</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>xml</nonFilteredFileExtension>
+                                </nonFilteredFileExtensions>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>TaR-processing-test-resources</id>
+                            <phase>process-test-resources</phase>
+                            <goals>
+                                <goal>testResources</goal>
+                            </goals>
+                            <configuration>
+                                <nonFilteredFileExtensions>
+                                    <nonFilteredFileExtension>class</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>jar</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>jks</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>p12</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>wsdl</nonFilteredFileExtension>
+                                    <nonFilteredFileExtension>xml</nonFilteredFileExtension>
+                                </nonFilteredFileExtensions>
+                            </configuration>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <nonFilteredFileExtensions>
+                            <nonFilteredFileExtension>class</nonFilteredFileExtension>
+                            <nonFilteredFileExtension>jar</nonFilteredFileExtension>
+                            <nonFilteredFileExtension>jks</nonFilteredFileExtension>
+                            <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
+                            <nonFilteredFileExtension>p12</nonFilteredFileExtension>
+                            <nonFilteredFileExtension>wsdl</nonFilteredFileExtension>
+                            <nonFilteredFileExtension>xml</nonFilteredFileExtension>
+                        </nonFilteredFileExtensions>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
-   <groupId>com.example</groupId>
-   <artifactId>OpenAPIStubs</artifactId>
-   <version>1.0.0</version>
-
-   <properties>
-      <skipTests>true</skipTests>
-      <java.version>17</java.version>
-      <maven.compiler.source>${java.version}</maven.compiler.source>
-      <maven.compiler.target>${java.version}</maven.compiler.target>
-   </properties>
-
-   <dependencies>
-      <dependency>
-         <!-- OpenAPI Generator uses gson library by default to generate the Java stubs -->
-         <groupId>com.google.code.gson</groupId>
-         <artifactId>gson</artifactId>
-         <version>2.10.1</version>
-      </dependency>
-      <dependency>
-         <!-- Required for JDK 17 -->
-         <groupId>jakarta.annotation</groupId>
-         <artifactId>jakarta.annotation-api</artifactId>
-         <version>2.1.1</version>
-      </dependency>
-      <dependency>
-         <!-- Required for JSON.java supporting file -->
-         <groupId>io.gsonfire</groupId>
-         <artifactId>gson-fire</artifactId>
-         <version>1.8.4</version>
-      </dependency>
-      <dependency>
-         <!-- Required for JSON.java supporting file -->
-         <groupId>com.squareup.okio</groupId>
-         <artifactId>okio</artifactId>
-         <version>3.0.0-alpha.4</version>
-      </dependency>
-      <dependency>
-         <!-- Required to use Jackson annotations such as @JsonProperty -->
-         <groupId>com.fasterxml.jackson.core</groupId>
-         <artifactId>jackson-databind</artifactId>
-         <version>2.14.2</version>
-      </dependency>
-      <dependency>
-         <!-- Required to use Jackson annotations such as @JsonProperty -->
-         <groupId>com.fasterxml.jackson.datatype</groupId>
-         <artifactId>jackson-datatype-jsr310</artifactId>
-         <version>2.13.1</version>
-      </dependency>
-
-   </dependencies>
-
-   <build>
-      <plugins>
-         <plugin>
-            <groupId>org.openapitools</groupId>
-            <artifactId>openapi-generator-maven-plugin</artifactId>
-            <version>6.4.0</version>
-            <executions>
-               <execution>
-                  <id>OpenAPIStubs</id>
-                  <goals>
-                     <goal>generate</goal>
-                  </goals>
-                  <configuration>
-                     <inputSpec>src/main/resources/schema/schema.yaml</inputSpec>
-                     <generatorName>java</generatorName>
-                     <generateApis>false</generateApis>
-                     <generateModelTests>false</generateModelTests>
-                     <generateModelDocumentation>false</generateModelDocumentation>
-                     <generateSupportingFiles>true</generateSupportingFiles>
-                     <configOptions>
-                        <useSerializedNameOnly>true</useSerializedNameOnly>
-                        <importMappings>
-                           SerializedName=com.fasterxml.jackson.annotation.JsonProperty
-                        </importMappings>
-                        <useJakartaEe>true</useJakartaEe>
-                        <useJakartaNamespace>true</useJakartaNamespace>
-                        <useJacksonAnnotations>true</useJacksonAnnotations>
-                        <interfaceOnly>true</interfaceOnly>
-                     </configOptions>
-                     <supportingFilesToGenerate>JSON.java</supportingFilesToGenerate>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <version>3.2.0</version>
-            <executions>
-               <execution>
-                  <id>attach-sources</id>
-                  <goals>
-                     <goal>jar</goal>
-                  </goals>
-               </execution>
-            </executions>
-         </plugin>
-      </plugins>
-
-   </build>
 </project>
