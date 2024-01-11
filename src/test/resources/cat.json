@@ -1,0 +1,13 @@
+{
+  "animals": [
+    {
+      "type": "CAT",
+      "purrs": true
+    },
+    {
+      "type": "DOG",
+      "barks": true
+    }
+  ]
+}
+
