@@ -33,30 +33,33 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Animal'
-    Animal:
-      type: object
-      required:
-        - type
-      properties:
-        type:
-          type: string
-          enum: [CAT, DOG]
-      discriminator:
-        propertyName: type
-        mapping:
-          CAT: "#/components/schemas/Cat"
-          DOG: "#/components/schemas/Dog"
-    Cat:
-      allOf:
-        - $ref: "#/components/schemas/Animal"
-        - type: object
-          properties:
-            purrs:
-              type: boolean
     Dog:
       allOf:
-        - $ref: "#/components/schemas/Animal"
-        - type: object
-          properties:
-            barks:
-              type: boolean
+        - $ref: '#/components/schemas/Animal'
+        - $ref: '#/components/schemas/Dog_allOf'
+    Cat:
+      allOf:
+        - $ref: '#/components/schemas/Animal'
+        - $ref: '#/components/schemas/Cat_allOf'
+    Animal:
+      discriminator:
+        propertyName: className
+      properties:
+        className:
+          type: string
+        color:
+          default: red
+          type: string
+      required:
+        - className
+      type: object
+    Dog_allOf:
+      properties:
+        breed:
+          type: string
+      type: object
+    Cat_allOf:
+      properties:
+        declawed:
+          type: boolean
+      type: object
